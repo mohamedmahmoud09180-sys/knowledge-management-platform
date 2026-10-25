@@ -28,7 +28,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- نافذة تثبيت التطبيق PWA (تظهر تدريجياً) -->
+    <!-- نافذة تثبيت التطبيق PWA -->
     <div id="installBanner" class="hidden bg-indigo-600 text-white px-4 py-3 text-center text-sm font-medium flex items-center justify-center gap-3 shadow-md z-50">
         <span>📱 هل تريد تثبيت المنصة كتطبيق على هاتفك أو جهازك للعمل بدون إنترنت؟</span>
         <button id="installBtn" class="bg-white text-indigo-700 px-3 py-1 rounded-full font-bold hover:bg-indigo-50 transition">تثبيت الآن</button>
@@ -49,11 +49,9 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- زر تبديل الوضع الليلي والنهاري -->
                 <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 transition" title="تبديل الوضع الليلي">
                     <i id="darkModeIcon" class="fa-solid fa-moon text-slate-600 dark:text-yellow-400"></i>
                 </button>
-                <!-- معلومات الطالب النشط -->
                 <div id="userBadge" class="hidden sm:flex items-center gap-2 bg-indigo-50 dark:bg-slate-700/50 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-slate-600">
                     <i class="fa-solid fa-user-graduate text-indigo-600 dark:text-indigo-400"></i>
                     <span id="navUserName" class="text-sm font-semibold"></span>
@@ -65,23 +63,31 @@
     <!-- المحتوى الرئيسي -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
 
-        <!-- 1. شاشة تسجيل الطالب (تظهر للمرة الأولى) -->
+        <!-- 1. شاشة تسجيل الطالب مع القائمة المنسدلة للتخصصات الستة -->
         <section id="authScreen" class="max-w-md mx-auto bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 my-12">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <h2 class="text-2xl font-bold">تسجيل الطالب</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">أدخل بياناتك للبدء في مراجعة المواد واختبارات الأداء</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">يجب إدخال الاسم واختيار التخصص للبدء</p>
             </div>
             <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold mb-1">الاسم الكامل</label>
+                    <label class="block text-sm font-semibold mb-1">الاسم الكامل <span class="text-rose-500">*</span></label>
                     <input type="text" id="inputName" required placeholder="مثال: محمد محمود سيد أحمد" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1">التخصص / القسم</label>
-                    <input type="text" id="inputMajor" required value="قسم نظم المعلومات - الدفعة 14" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                    <label class="block text-sm font-semibold mb-1">التخصص / القسم الأكاديمي <span class="text-rose-500">*</span></label>
+                    <select id="inputMajor" required class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                        <option value="" disabled selected>-- اختر التخصص أو القسم --</option>
+                        <option value="قسم نظم المعلومات (Information Systems)">قسم نظم المعلومات (Information Systems)</option>
+                        <option value="قسم علوم الحاسوب (Computer Science)">قسم علوم الحاسوب (Computer Science)</option>
+                        <option value="قسم تقانة المعلومات (Information Technology)">قسم تقانة المعلومات (Information Technology)</option>
+                        <option value="قسم هندسة البرمجيات (Software Engineering)">قسم هندسة البرمجيات (Software Engineering)</option>
+                        <option value="قسم شبكات الحاسوب والأمن السيبراني (Networks & Cybersecurity)">قسم شبكات الحاسوب والأمن السيبراني</option>
+                        <option value="قسم الذكاء الاصطناعي (Artificial Intelligence)">قسم الذكاء الاصطناعي (Artificial Intelligence)</option>
+                    </select>
                 </div>
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
                     <span>دخول المنصة</span>
@@ -90,15 +96,13 @@
             </form>
         </section>
 
-        <!-- 2. لوحة التحكم الرئيسية (تظهر بعد التسجيل) -->
+        <!-- 2. لوحة التحكم الرئيسية -->
         <div id="mainDashboard" class="hidden space-y-8">
-            
-            <!-- الترحيب والإحصاءات السريعة -->
             <div class="bg-gradient-to-r from-indigo-600 to-violet-700 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
                 <div>
                     <span class="bg-white/20 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">جامعة كرري - كلية علوم الحاسوب</span>
                     <h2 class="text-2xl sm:text-3xl font-black mt-2">أهلاً بك، <span id="welcomeName"></span> 👋</h2>
-                    <p class="text-indigo-100 text-sm mt-1">اختر المادة الدراسية أدناه للبدء في المراجعة والاختبارات التفاعلية.</p>
+                    <p class="text-indigo-100 text-sm mt-1">اختر المادة الدراسية أدناه للبدء في المراجعة والاختبارات الشاملة (20 سؤالاً لكل محور).</p>
                 </div>
                 <div class="flex gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center">
                     <div>
@@ -113,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- قائمة المواد الدراسية -->
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-xl font-bold flex items-center gap-2">
@@ -122,11 +125,10 @@
                     </h3>
                 </div>
                 <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- يتم تعبئتها برمجياً -->
+                    <!-- تعبئة المواد -->
                 </div>
             </div>
 
-            <!-- لوحة المتصدرين وتحدي الطلاب -->
             <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-bold flex items-center gap-2">
@@ -141,20 +143,21 @@
                             <tr class="border-b border-slate-100 dark:border-slate-700 text-xs text-slate-400">
                                 <th class="pb-3 font-semibold">المركز</th>
                                 <th class="pb-3 font-semibold">اسم الطالب</th>
+                                <th class="pb-3 font-semibold">التخصص</th>
                                 <th class="pb-3 font-semibold">المادة</th>
                                 <th class="pb-3 font-semibold">النتيجة</th>
-                                <th class="pb-3 font-semibold">الزمن المستغرق</th>
+                                <th class="pb-3 font-semibold">الزمن</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboardTableBody" class="divide-y divide-slate-100 dark:divide-slate-700/50 text-sm">
-                            <!-- يتم تعبئتها برمجياً -->
+                            <!-- تعبئة المتصدرين -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 3. شاشة استعراض محاور المادة والاختبارات -->
+        <!-- 3. شاشة استعراض محاور المادة -->
         <div id="courseScreen" class="hidden space-y-6">
             <button onclick="backToDashboard()" class="inline-flex items-center gap-2 text-sm font-semibold bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition">
                 <i class="fa-solid fa-arrow-right"></i>
@@ -167,22 +170,21 @@
                     <h2 id="activeCourseTitle" class="text-2xl font-black mt-2"></h2>
                 </div>
                 <div class="flex gap-3 w-full md:w-auto">
-                    <button onclick="startQuiz('all')" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center justify-center gap-2">
+                    <button onclick="startQuiz('all')" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-file-pen"></i>
                         <span>بدء الاختبار الشامل (30 دقيقة)</span>
                     </button>
                 </div>
             </div>
 
-            <!-- محاور المادة وبنك الأسئلة -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
                     <h3 class="font-bold text-lg flex items-center gap-2">
                         <i class="fa-solid fa-list-check text-indigo-600"></i>
-                        <span>وحدات ومحاور المادة</span>
+                        <span>وحدات ومحاور المادة (20 سؤالاً لكل محور)</span>
                     </h3>
                     <div id="modulesList" class="space-y-2">
-                        <!-- تعبئة الوحدات -->
+                        <!-- الوحدات -->
                     </div>
                 </div>
 
@@ -191,7 +193,7 @@
                         <i class="fa-solid fa-brain"></i>
                     </div>
                     <h3 class="text-xl font-bold">جاهز لاختبار معلوماتك؟</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mt-2 mb-6">اختر الاختبار الشامل للمادة أو اختبر نفسك في أي محور محدد لتقییم مستواك والحصول على تقرير تفصيلي مع الإجابات الصحيحة.</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mt-2 mb-6">اختر الاختبار الشامل أو اختبر نفسك في أي محور محدد (يتضمن كل محور 20 سؤالاً معتمداً من الملفات).</p>
                     <button onclick="startQuiz('all')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition">ابدأ الاختبار الآن</button>
                 </div>
             </div>
@@ -204,18 +206,16 @@
                     <span id="quizModuleBadge" class="text-xs bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold px-3 py-1 rounded-full"></span>
                     <h3 id="quizTitle" class="text-xl font-black mt-2">اختبار المادة</h3>
                 </div>
-                <!-- المؤقت التنازلي -->
                 <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-4 py-2 rounded-2xl border border-amber-200 dark:border-amber-700/50 font-bold">
                     <i class="fa-solid fa-stopwatch"></i>
                     <span id="timerDisplay">30:00</span>
                 </div>
             </div>
 
-            <!-- بطاقة السؤال -->
             <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
                 <div class="flex justify-between items-center text-sm text-slate-400">
-                    <span id="questionCounter">السؤال 1 من 10</span>
-                    <span id="questionProgressText">10%</span>
+                    <span id="questionCounter">السؤال 1 من 20</span>
+                    <span id="questionProgressText">5%</span>
                 </div>
                 <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                     <div id="quizProgressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
@@ -224,11 +224,10 @@
                 <h4 id="questionText" class="text-xl font-bold leading-relaxed pt-2">نص السؤال هنا...</h4>
 
                 <div id="optionsContainer" class="space-y-3">
-                    <!-- خيارات الإجابة -->
+                    <!-- الخيارات -->
                 </div>
             </div>
 
-            <!-- أزرار التنقل في الاختبار -->
             <div class="flex justify-between items-center">
                 <button onclick="prevQuestion()" id="prevBtn" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold px-6 py-3 rounded-xl hover:bg-slate-50 transition disabled:opacity-50">السابق</button>
                 <button onclick="nextQuestion()" id="nextBtn" class="bg-indigo-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition">السؤال التالي</button>
@@ -265,27 +264,24 @@
                 </div>
             </div>
 
-            <!-- مراجعة الإجابات المفصلة -->
             <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
                 <h4 class="font-bold text-lg">مراجعة الإجابات الصحيحة والخاطئة</h4>
                 <div id="detailedReviewContainer" class="space-y-4">
-                    <!-- تفاصيل المراجعة -->
+                    <!-- المراجعة التفصيلية -->
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- تذييل الصفحة -->
     <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
             منصة نظم المعلومات التفاعلية لطلاب الجامعة © 2026 - جميع الحقوق محفوظة
         </div>
     </footer>
 
-    <!-- منطق البرمجة وتخزين البيانات -->
+    <!-- قاعدة البيانات البرمجية (20 سؤالاً لكل محور بإجمالي 200 سؤال لإدارة المعرفة) -->
     <script>
-        // قاعدة البيانات الشاملة للمقررات والأسئلة الحقيقية المستخرجة
         const COURSES_DATA = {
             "knowledge_management": {
                 title: "إدارة المعرفة (Knowledge Management)",
@@ -304,16 +300,225 @@
                     "المحور العاشر: رأس المال الفكري وإدارته"
                 ],
                 questions: [
-                    { id: 1, moduleIndex: 0, question: "ما هو أعلى مستوى في هرم المعرفة؟", options: ["البيانات", "المعلومات", "المعرفة", "الحكمة"], correct: 3, explanation: "الحكمة هي أعلى مستوى في الهرم وتنتج عن تراكم المعارف والخبرات." },
-                    { id: 2, moduleIndex: 0, question: "المعرفة التي تتواجد في عقول الأفراد وصعبة الترميز وتنتقل بالممارسة هي:", options: ["المعرفة الصريحة", "المعرفة الضمنية", "المعلومات الخام", "البيانات"], correct: 1, explanation: "المعرفة الضمنية هي خبرات ومهارات وحدس موجود في عقول الأفراد." },
-                    { id: 3, moduleIndex: 1, question: "أي من عمليات إدارة المعرفة التالية تركز على تحديد الفجوة بين المعرفة الموجودة والمطلوبة؟", options: ["توليد المعرفة", "تشخيص المعرفة", "خزن المعرفة", "تطبيق المعرفة"], correct: 1, explanation: "تشخيص المعرفة يحدد أنواعها ومصادرها ومقارنتها بالمعرفة المطلوبة." },
-                    { id: 4, moduleIndex: 1, question: "يتكون نموذج SECI لتحويل المعرفة من كم مرحلة؟", options: ["مرحلتان", "ثلاث مراحل", "أربع مراحل", "خمس مراحل"], correct: 2, explanation: "يتكون نموذج SECI من 4 مراحل: التنشئة، الأخرجة، التجميع، والأدخلة." },
-                    { id: 5, moduleIndex: 2, question: "من أهم مبادئ إدارة المعرفة:", options: ["التكنولوجيا وحدها تكفي", "مشاركة المعرفة أصعب من إنتاجها", "إدارة المعرفة بلا نهاية ولا تحتاج تكلفة", "الإتاحة وحدها تضمن الاستخدام"], correct: 1, explanation: "مشاركة المعرفة أصعب من إنتاجها وخاصة المعرفة الضمنية." },
-                    { id: 6, moduleIndex: 3, question: "استراتيجيات ويغ (Wiig) في إدارة المعرفة تتضمن:", options: ["النمو التدريجي والتبني المتروي ودعم وجهات النظر الفاعلة", "الترميزية مقابل الشخصية فقط", "جانب العرض مقابل الطلب فقط", "الاستحواذ الفوري"], correct: 0, explanation: "استراتيجيات ويغ تشمل النمو التدريجي، التبني المتروي، ودعم وجهات النظر المتقدمة." },
-                    { id: 7, moduleIndex: 4, question: "تتكون النظم الخبيرة أساساً من المكونات التالية:", options: ["قاعدة معرفة، آلة استدلال، واجهة مستخدم", "مستودع بيانات فقط", "تنقيب عن البيانات وشبكة", "أجهزة حاسوب متقدمة"], correct: 0, explanation: "النظم الخبيرة تتكون أساساً من قاعدة معرفة، آلة استدلال، واجهة للمستخدم." },
-                    { id: 8, moduleIndex: 5, question: "تشمل المرحلة الثالثة من مراحل تطبيق إدارة المعرفة:", options: ["البنية التحتية والعلاقات", "التكامل الداخلي (هيكلة المعرفة ورسم خرائطها)", "التعاون والشبكات الخارجية", "تبرير الأفكار"], correct: 1, explanation: "المرحلة الثالثة هي التكامل الداخلي وتشمل هيكلة المعرفة ورسم خرائطها ومحركات البحث." },
-                    { id: 9, moduleIndex: 6, question: "تؤثر إدارة المعرفة على العاملين من خلال:", options: ["تقليل الرضا الوظيفي", "توسيع الخبرات ودعم التعلم المستمر وزيادة المرونة", "تقييد القدرة على التكيف", "خفض الإنتاجية"], correct: 1, explanation: "إدارة المعرفة توسع الخبرات وتدعم التعلم المستمر وتزيد المرونة والرضا الوظيفي." },
-                    { id: 10, moduleIndex: 9, question: "يمثل رأس المال الفكري:", options: ["رأس مال مادي يندثر سريعاً", "معرفة غير ملموسة تتزايد بالابتكار والتجديد", "أصول عقارية فقط", "قروض بنكية"], correct: 1, explanation: "رأس المال الفكري معرفة غير ملموسة وقيمته تتزايد بالابتكار والتجديد." }
+                    // المحور الأول (20 سؤالاً)
+                    { id: 1, moduleIndex: 0, question: "ما هو أعلى مستوى في هرم المعرفة؟", options: ["البيانات", "المعلومات", "المعرفة", "الحكمة"], correct: 3, explanation: "الحكمة هي أعلى مستوى في الهرم[span_0](start_span)[span_0](end_span)." },
+                    { id: 2, moduleIndex: 0, question: "المعرفة التي تتواجد في عقول الأفراد وصعبة الترميز هي:", options: ["المعرفة الصريحة", "المعرفة الضمنية", "المعلومات الخام", "البيانات"], correct: 1, explanation: "المعرفة الضمنية خبرات ومهارات موجودة في عقول الأفراد[span_1](start_span)[span_1](end_span)." },
+                    { id: 3, moduleIndex: 0, question: "البيانات في هرم المعرفة تعبر عن:", options: ["معلومات مفسرة", "عناصر خام غير منظمة ولا تحمل معنى", "استنتاجات عليا", "خبرات متراكمة"], correct: 1, explanation: "البيانات عناصر خام غير منظمة ولا تحمل معنى واضحاً[span_2](start_span)[span_2](end_span)." },
+                    { id: 4, moduleIndex: 0, question: "المعلومات تنتج عن:", options: ["بيانات تمت معالجتها وتنظيمها", "أفكار عشوائية", "تراكم الحكمة فقط", "الخبرات المجرّدة"], correct: 0, explanation: "المعلومات بيانات تمت معالجتها فأصبحت ذات معنى[span_3](start_span)[span_3](end_span)." },
+                    { id: 5, moduleIndex: 0, question: "من خصائص المعرفة الأساسية:", options: ["تتناقص بالاستخدام", "غير ناضبة ولا تفنى بالاستعمال", "مادية وملموسة", "تتعرض للاندثار كالمال المادي"], correct: 1, explanation: "المعرفة غير ناضبة واستعمالها لا يؤدي إلى نفادها[span_4](start_span)[span_4](end_span)." },
+                    { id: 6, moduleIndex: 0, question: "تصنيف Marquardt للمعرفة يتضمن معرفة ماذا وكيف و:", options: ["لماذا، أين، متى", "من، كم، لمن", "أي، هل، ربما", "لماذا فقط"], correct: 0, explanation: "ماركوارت حدد 5 أنواع: ماذا، كيف، لماذا، أين، متى[span_5](start_span)[span_5](end_span)." },
+                    { id: 7, moduleIndex: 0, question: "المعرفة الصريحة تتميز بأنها:", options: ["صعبة التوثيق", "مرمزة ومكتوبة وسهلة المشاركة", "موجودة في الحدس فقط", "غير قابلة للنقل الرقمي"], correct: 1, explanation: "الصريحة مرمزة مكتوبة أو رقمية وسهلة المشاركة[span_6](start_span)[span_6](end_span)." },
+                    { id: 8, moduleIndex: 0, question: "من مواقع المعرفة في المنظمة:", options: ["الموظفون والجماعات", "الأشياء والمصنعات والأنظمة", "الكيانات التنظيمية وعلاقات العملاء", "جميع ما سبق صحيح"], correct: 3, explanation: "مواقع المعرفة تشمل الأفراد والأشياء والكيانات والعلاقات[span_7](start_span)[span_7](end_span)." },
+                    { id: 9, moduleIndex: 0, question: "المصادر الداخلية للمعرفة تشمل:", options: ["الخبراء والمؤتمرات", "خبرات الأفراد والذاكرة والمعتقدات", "المنافسون والعملاء", "الإنترنت والموردون"], correct: 1, explanation: "المصادر الداخلية تشمل خبرات الأفراد والذاكرة والافتراضات[span_8](start_span)[span_8](end_span)." },
+                    { id: 10, moduleIndex: 0, question: "من أسباب التحول نحو إدارة المعرفة في التسعينيات:", options: ["العولمة والرقمنة", "ارتفاع قيمة المعرفة كأصل غير ملموس", "تغير حاجات الزبائن وشدة المنافسة", "جميع ما سبق صحيح"], correct: 3, explanation: "أسباب التحول تشمل العولمة، المنافسة، الرقمنة وارتفاع قيمة المعرفة[span_9](start_span)[span_9](end_span)." },
+                    { id: 11, moduleIndex: 0, question: "المعرفة كمورد استراتيجي تهدف إلى:", options: ["خلق الميزة التنافسية", "زيادة تكاليف التشغيل", "تقليل مرونة المنظمة", "إلغاء العنصر البشري"], correct: 0, explanation: "المعرفة تساعد على خلق الميزة التنافسية والمحافظة عليها[span_10](start_span)[span_10](end_span)." },
+                    { id: 12, moduleIndex: 0, question: "هل تتحول كل المعلومات إلى معرفة؟", options: ["نعم دائماً", "لا، ليس كل معلومات تتحول لمعرفة", "فقط في الشركات الكبرى", "دائماً وبشكل تلقائي"], correct: 1, explanation: "لا تتحول كل المعلومات إلى معرفة إلا إذا وجهت واختبرت[span_11](start_span)[span_11](end_span)." },
+                    { id: 13, moduleIndex: 0, question: "إدارة المعرفة تُعرف بأنها:", options: ["مجموعة عمليات مترابطة لاكتساب وتخزين ومشاركة وتطبيق المعرفة", "أرشفة المستندات الورقية فقط", "إدارة أجهزة الحاسوب والشبكات", "متابعة الحسابات المالية"], correct: 0, explanation: "إدارة المعرفة عمليات لاكتساب وخلق وتخزين ومشاركة وتطبيق المعرفة[span_12](start_span)[span_12](end_span)." },
+                    { id: 14, moduleIndex: 0, question: "ارتبطت نشأة مجال إدارة المعرفة حديثاً بـ:", options: ["هندسة المعرفة", "المحاسبة المالية", "إدارة المخازن", "التسويق التقليدي"], correct: 0, explanation: "نشأة المجال الحديث ارتبطت بهندسة المعرفة ثم برزت بقوة بالتسعينيات[span_13](start_span)[span_13](end_span)." },
+                    { id: 15, moduleIndex: 0, question: "المصادر الخارجية للمعرفة تشمل:", options: ["الذاكرة الشخصية", "المعتقدات الذاتية", "العملاء والموردون والمنافسون", "افتراضات الإدارة العليا"], correct: 2, explanation: "المصادر الخارجية تشمل العملاء والموردين والمنافسين والإنترنت[span_14](start_span)[span_14](end_span)." },
+                    { id: 16, moduleIndex: 0, question: "تراكمية المعرفة تعني أنها:", options: ["منظمة دقيقة وقابلة للتفسير والتطوير", "ثابتة لا تتغير", "غير منظمة", "تقتصر على الأفراد الجدد"], correct: 0, explanation: "المعرفة تراكمية شاملة، منظمة دقيقة وقابلة للتفسير والتعليل[span_15](start_span)[span_15](end_span)." },
+                    { id: 17, moduleIndex: 0, question: "من أهداف إدارة المعرفة الرئيسية:", options: ["تحويل الضمني إلى الصريح وتشجيع المشاركة", "إخفاء المعلومات عن العاملين", "الاعتماد على المعرفة المستوردة فقط", "إلغاء الابتكار"], correct: 0, explanation: "من الأهداف تحويل الضمني إلى الصريح ودعم التعلم والابتكار[span_16](start_span)[span_16](end_span)." },
+                    { id: 18, moduleIndex: 0, question: "الفرق بين البيانات والمعلومات هو أن:", options: ["البيانات عشوائية والمعلومات منظمة ذات معنى", "المعلومات أقدم من البيانات", "لا يوجد فرق بينهما", "البيانات أعلى في الهرم من المعرفة"], correct: 0, explanation: "البيانات خام غير منظمة، والمعلومات عولجت فأصبحت ذات معنى[span_17](start_span)[span_17](end_span)." },
+                    { id: 19, moduleIndex: 0, question: "القدرة على الحكم والاستنتاج واتخاذ القرار الحكيم ناتجة عن مستوى:", options: ["البيانات", "المعلومات", "المعرفة", "الحكمة"], correct: 3, explanation: "الحكمة تنتج عن تراكم المعارف والقدرة على الحكم والاستنتاج[span_18](start_span)[span_18](end_span)." },
+                    { id: 20, moduleIndex: 0, question: "خصائص المعرفة تتضمن أنها:", options: ["متجذرة بدرجة كبيرة في الأفراد وقابلة للاستنساخ", "تنفد بالاستخدام المتكرر", "تندثر مثل الأصول المادية", "غير قابلة للحماية"], correct: 0, explanation: "المعرفة يمكن امتلاكها وحمايتها وهي متجذرة في الأفراد وقابلة للتخزين[span_19](start_span)[span_19](end_span)." },
+
+                    // المحور الثاني (20 سؤالاً)
+                    { id: 21, moduleIndex: 1, question: "ما هي العمليات الأساسية لإدارة المعرفة؟", options: ["تشخيص، توليد، خزن، توزيع/مشاركة، تطبيق", "شراء، بيع، تخزين، إنتاج", "تخطيط، توجيه، رقابة، تنظيم", "جمع، تحليل، نشر، أرشيف"], correct: 0, explanation: "العمليات الأساسية مترابطة ومتسلسلة: تشخيص، توليد، خزن، مشاركة، تطبيق[span_20](start_span)[span_20](end_span)." },
+                    { id: 22, moduleIndex: 1, question: "عملية تشخيص المعرفة تركز على:", options: ["تحديد أنواع المعرفة ومصادرها ومقارنتها بالمتطلبات لتحديد الفجوة", "صيانة الأجهزة", "حساب الأرباح والخسائر", "طباعة التقارير"], correct: 0, explanation: "تشخيص المعرفة يحدد الأنواع والمصادر والمواقع لتحديد الفجوة[span_21](start_span)[span_21](end_span)." },
+                    { id: 23, moduleIndex: 1, question: "يتم توليد المعرفة الجديدة عبر طرق تشمل:", options: ["الأسر، الشراء، الابتكار، الاكتشاف، الامتصاص", "الحذف والإتلاف", "التخزين المؤقت", "الاستيراد العشوائي"], correct: 0, explanation: "طرق توليد المعرفة تشمل الأسر، الشراء، الابتكار، الاكتشاف والاكتساب[span_22](start_span)[span_22](end_span)." },
+                    { id: 24, moduleIndex: 1, question: "نموذج SECI الشهير لتوليد المعرفة يتكون من كم مرحلة؟", options: ["مرحلتان", "ثلاث مراحل", "أربع مراحل", "خمس مراحل"], correct: 2, explanation: "نموذج SECI يتكون من 4 مراحل (التنشئة، الأخرجة، التجميع، الأدخلة)[span_23](start_span)[span_23](end_span)." },
+                    { id: 25, moduleIndex: 1, question: "مرحلة التنشئة في نموذج SECI تحول المعرفة من:", options: ["ضمنية إلى ضمنية", "ضمنية إلى صريحة", "صريحة إلى صريحة", "صريحة إلى ضمنية"], correct: 0, explanation: "التنشئة تعني تحويل ضمنية إلى ضمنية عبر التفاعل والتعلم[span_24](start_span)[span_24](end_span)." },
+                    { id: 26, moduleIndex: 1, question: "مرحلة الأخرجة (Externalization) في نموذج SECI تحول المعرفة من:", options: ["ضمنية إلى صريحة", "صريحة إلى ضمنية", "صريحة إلى صريحة", "ضمنية إلى ضمنية"], correct: 0, explanation: "الأخرجة تحول المعرفة الضمنية إلى صريحة عبر التوثيق والنمذجة[span_25](start_span)[span_25](end_span)." },
+                    { id: 27, moduleIndex: 1, question: "مرحلة التجميع (Combination) في نموذج SECI تحول المعرفة من:", options: ["صريحة إلى صريحة", "ضمنية إلى ضمنية", "صريحة إلى ضمنية", "ضمنية إلى صريحة"], correct: 0, explanation: "التجميع يحول صريحة إلى صريحة عبر دمج الوثائق وقواعد البيانات[span_26](start_span)[span_26](end_span)." },
+                    { id: 28, moduleIndex: 1, question: "مرحلة الأدخلة (Internalization) في نموذج SECI تحول المعرفة من:", options: ["صريحة إلى ضمنية", "ضمنية إلى صريحة", "ضمنية إلى ضمنية", "صريحة إلى صريحة"], correct: 0, explanation: "الأدخلة تحول صريحة إلى ضمنية عبر التعلم والتطبيق والتدريب[span_27](start_span)[span_27](end_span)." },
+                    { id: 29, moduleIndex: 1, question: "عملية خزن المعرفة تشمل:", options: ["الاحتفاظ، الإادامة، الترميز، الوصول، السرية، الحماية والاسترجاع", "الحذف النهائي", "البيع والتسويق", "الطباعة الورقية فقط"], correct: 0, explanation: "خزن المعرفة يشمل 7 عناصر رئيسية كالاحتفاظ والترميز والحماية[span_28](start_span)[span_28](end_span)." },
+                    { id: 30, moduleIndex: 1, question: "الهدف الأساسي من مشاركة وتوزيع المعرفة هو:", options: ["إيصال المعرفة المناسبة للشخص المناسب في الوقت والشكل المناسب", "نشر الأسرار للعامة", "الاحتفاظ بالمعرفة للأفراد فقط", "إبطاء العمليات"], correct: 0, explanation: "المشاركه تهدف لإيصال المعرفة المناسبة للشخص المناسب في الوقت المناسب[span_29](start_span)[span_29](end_span)." },
+                    { id: 31, moduleIndex: 1, question: "من وسائل المشاركة المقصودة للمعرفة:", options: ["اللقاءات غير الرسمية وغرف المحادثة", "التدريب والتقارير والمذكرات وتدوير العمل", "الاحتكاك اليومي الصدفة", "المنتديات العشوائية"], correct: 1, explanation: "المشاركة المقصودة تشمل التدريب والتقارير والمذكرات وتدوير العمل والفيديو[span_30](start_span)[span_30](end_span)." },
+                    { id: 32, moduleIndex: 1, question: "من وسائل المشاركة غير المقصودة للمعرفة:", options: ["الدورات التدريبية الرسمية", "اللقاءات غير الرسمية وغرف المحادثة والمنتديات والاحتكاك اليومي", "التقارير المالية", "المذكرات الإدارية الصارمة"], correct: 1, explanation: "المشاركة غير المقصودة تشمل اللقاءات غير الرسمية وغرف المحادثة والاحتكاك اليومي[span_31](start_span)[span_31](end_span)." },
+                    { id: 33, moduleIndex: 1, question: "ما هو أكبر عائق يواجه عملية تطبيق المعرفة؟", options: ["خوف بعض الأفراد من فقدان ميزتهم المعرفية، وضعف القيادة والحوافز", "وفرة التقنية الحديثة", "سرعة الإنترنت", "كثرة الأرباح"], correct: 0, explanation: "أكبر عائق هو خوف الأفراد من فقدان ميزتهم المعرفية وضعف القيادة والحوافز[span_32](start_span)[span_32](end_span)." },
+                    { id: 34, moduleIndex: 1, question: "تظهر القيمة الحقيقية للمعرفة عندما:", options: ["تُحفظ في الأدراج", "تُستخدم في حل المشكلات وتحسين العمل وخلق الميزة التنافسية", "تُهمل تماماً", "تُباع للمنافسين"], correct: 1, explanation: "القيمة الحقيقية للمعرفة تظهر عند استخدامها في حل المشكلات[span_33](start_span)[span_33](end_span)." },
+                    { id: 35, moduleIndex: 1, question: "عدم تطبيق المعرفة يؤدي إلى:", options: ["تكرار الأخطاء وضياع الخبرات وفرص التعلم والإيرادات", "زيادة الكفاءة والابتكار", "تحقيق الريادة السوقية", "تطوير المنظمة"], correct: 0, explanation: "عدم التطبيق يؤدي لضياع الخبرات وتكرار الأخطاء وضياع فرص التعلم[span_34](start_span)[span_34](end_span)." },
+                    { id: 36, moduleIndex: 1, question: "عمليات إدارة المعرفة الأساسية تتميز بأنها:", options: ["مترابطة ومتسلسلة", "منفصلة تماماً ولا علاقة لها ببعضها", "تحدث لمرة واحدة وتنتهي", "اختيارية وغير مهمة"], correct: 0, explanation: "العمليات الأساسية مترابطة ومتسلسلة تبدأ بالتشخيص وتنتهي بالتطبيق[span_35](start_span)[span_35](end_span)." },
+                    { id: 37, moduleIndex: 1, question: "دقة تشخيص المعرفة تعتبر:", options: ["شرطاً لنجاح بقية العمليات", "أمراً ثانوياً غير مؤثر", "سبباً لفشل المنظمة", "عملية تقنية صعبة"], correct: 0, explanation: "دقة تشخيص المعرفة هي شرط أساسي لنجاح بقية العمليات[span_36](start_span)[span_36](end_span)." },
+                    { id: 38, moduleIndex: 1, question: "يتم تخزين المعرفة المهمة والموثوقة عبر:", options: ["الوثائق والأنظمة وقواعد البيانات", "الذاكرة البشرية فقط دون توثيق", "الملفات التالفة", "الرسائل الشفهية"], correct: 0, explanation: "يتم تخزين المعرفة المهمة بالوثائق والأنظمة وقواعد البيانات[span_37](start_span)[span_37](end_span)." },
+                    { id: 39, moduleIndex: 1, question: "هدف توليد المعرفة يرتبط بـ:", options: ["التعلم والبحث والابتكار والعمل الجماعي", "الجمود الإداري", "تقليل عدد العاملين", "إيقاف الأنشطة"], correct: 0, explanation: "توليد المعرفة يرتبط بالتعلم والبحث والابتكار والعمل الجماعي[span_38](start_span)[span_38](end_span)." },
+                    { id: 40, moduleIndex: 1, question: "الفرق بين النقل والمشاركة في المعرفة هو أن:", options: ["المشاركة أوسع وتهدف لإيصال المعرفة المناسبة بالشكل المناسب", "النقل أوسع وأشمل", "لا يوجد أي فرق إطلاقاً", "النقل يقتصر على المشاعر"], correct: 0, explanation: "المشاركة أوسع من النقل والهدف إيصال المعرفة المناسبة للشخص المناسب[span_39](start_span)[span_39](end_span)." },
+
+                    // المحور الثالث (20 سؤالاً)
+                    { id: 41, moduleIndex: 2, question: "ما هو جوهر إدارة المعرفة الأساسي؟", options: ["الاستثمار في المعرفة كأصل", "شراء أجهزة حاسوب باهظة", "تقليص عدد الموظفين", "زيادة الإعلانات التجارية"], correct: 0, explanation: "جوهر إدارة المعرفة هو الاستثمار في المعرفة كأصل استراتيجي[span_40](start_span)[span_40](end_span)." },
+                    { id: 42, moduleIndex: 2, question: "الحل الناجح في إدارة المعرفة يجمع بين:", options: ["الإنسان والتكنولوجيا (التكنولوجيا وحدها لا تكفي)", "التكنولوجيا وحدها تماماً", "العنصر البشري فقط دون حواسيب", "العمليات الورقية"], correct: 0, explanation: "الحل الناجح يجمع الإنسان والتكنولوجيا، والتكنولوجيا وحدها لا تكفي[span_41](start_span)[span_41](end_span)." },
+                    { id: 43, moduleIndex: 2, question: "مشاركة المعرفة تعتبر:", options: ["أصعب من إنتاجها وخاصة المعرفة الضمنية", "أسهل بكثير من إنتاجها", "عملية آلية فورية", "غير مطلوبة في المنظمات"], correct: 0, explanation: "مشاركة المعرفة أصعب من إنتاجها وخاصة المعرفة الضمنية[span_42](start_span)[span_42](end_span)." },
+                    { id: 44, moduleIndex: 2, question: "هل النفاذ إلى المعرفة كافٍ لوحده؟", options: ["نعم يكفي تماماً", "لا، النفاذ بداية فقط ويجب أن تليه المشاركة والاستخدام", "الإتاحة وحدها تضمن التطبيق", "النفاذ يغني عن كل شيء"], correct: 1,explanation: "النفاذ إلى المعرفة بداية فقط، ويجب أن تليه المشاركة والاستخدام وتحفيزها[span_43](start_span)[span_43](end_span)." },
+                    { id: 45, moduleIndex: 2, question: "لماذا تُعتبر إدارة المعرفة عملية مستمرة بلا نهاية؟",options: ["بسبب التعلم المستمر والتجديد الدائم", "لأنها تتوقف بعد سنة", "لأنها غير مفيدة", "بسبب تراجع التقنية"], correct: 0, explanation: "إدارة المعرفة عملية مستمرة بلا نهاية بسبب التعلم والتجديد المستمر[span_44](start_span)[span_44](end_span)." },
+                    { id: 46, moduleIndex: 2, question: "إدارة المعرفة تُعد عملية:", options: ["مجانية تماماً", "مكلفة وتحتاج استثمارات في التوثيق والتكنولوجيا والتدريب", "قليلة التكلفة جداً", "لا تتطلب ميزانية"], correct: 1, explanation: "إدارة المعرفة مكلفة وتحتاج استثمارات في التوثيق والتكنولوجيا والتدريب[span_45](start_span)[span_45](end_span)." },
+                    { id: 47, moduleIndex: 2, question: "التكامل بين الإنسان والحاسوب في إدارة المعرفة يتمثل في:", options: ["الإنسان للفهم والخبرة والتكنولوجيا للمعالجة والتخزين والنقل", "الحاسوب للفهم والإنسان للتخزين", "الإنسان للآلة والحاسوب للإدارة", "لا يوجد تكامل"], correct: 0, explanation: "الإنسان للفهم والخبرة والتكنولوجيا للمعالجة والتخزين والنقل[span_46](start_span)[span_46](end_span)." },
+                    { id: 48, moduleIndex: 2, question: "لماذا تحتاج إدارة المعرفة إلى قيادة وحوافز؟", options: ["لان المعرفة مرتبطة بالقوة والسياسات التنظيمية", "لأن الموظفين يعملون بلا هدف", "لتخفيض الرواتب", "لإلغاء الترقيات"], correct: 0, explanation: "المعرفة مرتبطة بالقوة والسياسات التنظيمية لذلك تحتاج قيادة وحوافز[span_47](start_span)[span_47](end_span)." },
+                    { id: 49, moduleIndex: 2, question: "ما الذي يساعد المستخدم أكثر من النماذج النظرية المعقدة؟", options: ["الخرائط والمسارات المعرفية", "الكتب الضخمة غير المنظمة", "النظريات المجردة", "التعليمات الشفهية"], correct: 0, explanation: "الخرائط والمسارات المعرفية تساعد المستخدم أكثر من النماذج المعقدة[span_48](start_span)[span_48](end_span)." },
+                    { id: 50, moduleIndex: 2, question: "ما هي العناصر الأربعة الأساسية لإدارة المعرفة؟", options: ["المحتوى، التكنولوجيا، العمليات، الأفراد", "الأرباح، الخسائر، الأسواق، العملاء", "الأجهزة، الشبكات، الكابلات، الشاشات", "التخطيط، التنفيذ، المراجعة، التسليم"], correct: 0, explanation: "عناصر إدارة المعرفة الأربعة هي المحتوى، التكنولوجيا، العمليات، الأفراد[span_49](start_span)[span_49](end_span)." },
+                    { id: 51, moduleIndex: 2, question: "كم عدد التحديات الأساسية لإدارة المعرفة الواردة في المقرر؟", options: ["تحديان", "ثلاثة تحديات", "أربعة تحديات", "خمسة تحديات"], correct: 2, explanation: "التحديات هي 4: خدمة الزبائن، استخدام التكنولوجيا للمكانة التنافسية، تحويل الخبرات لتعلم تنظيمي، وتشجيع تدفق الأفكار[span_50](start_span)[span_50](end_span)." },
+                    { id: 52, moduleIndex: 2, question: "من عوامل النجاح الخارجية لإدارة المعرفة:", options: ["العولمة، تعقد حاجات المستهلك، شدة المنافسة، تعقد عمليات التوريد", "وفرة الأجهزة داخل المكتب", "مهارات الموظفين الفردية", "الهيكل التنظيمي المرن"], correct: 0, explanation: "عوامل النجاح الخارجية تشمل العولمة، تعقد حاجات المستهلك، شدة المنافسة، وتعقد التوريد[span_51](start_span)[span_51](end_span)." },
+                    { id: 53, moduleIndex: 2, question: "من عوامل النجاح الداخلية لإدارة المعرفة:", options: ["اختناقات الفاعلية، تطور القدرات التقنية، توفر أفراد مؤهلين وفهم الوظائف المعرفية", "الظروف الاقتصادية العالمية", "قوانين الدولة", "تغير الطقس"], correct: 0, explanation: "عوامل النجاح الداخلية تشمل اختناقات الفاعلية وتطور القدرات التقنية وتوفر أفراد مؤهلين[span_52](start_span)[span_52](end_span)." },
+                    { id: 54, moduleIndex: 2, question: "هل الإتاحة وحدها تضمن استخدام المعرفة؟", options: ["نعم تضمن ذلك تماماً", "لا، الإتاحة وحدها لا تضمن الاستخدام وتحتاج إلى تحفيز", "نعم بشكل تلقائي", "تؤدي لإخفاء المعرفة"], correct: 1, explanation: "المشاركة والاستخدام يحتاجان إلى تحفيز، الإتاحة وحدها لا تضمن الاستخدام[span_53](start_span)[span_53](end_span)." },
+                    { id: 55, moduleIndex: 2, question: "تحويل خبرات العاملين إلى تعلم تنظيمي يُعتبر من:", options: ["التحديات الأساسية لإدارة المعرفة", "المشاكل المالية البسيطة", "العوامل الخارجية البحتة", "الأمور غير المهمة"], correct: 0, explanation: "تحويل خبرات العاملين إلى تعلم تنظيمي هو أحد تحديات إدارة المعرفة الأربعة[span_54](start_span)[span_54](end_span)." },
+                    { id: 56, moduleIndex: 2, question: "تشجيع تدفق الأفكار والإبداع يعتبر تحدياً يواجه:", options: ["إدارة المعرفة في المنظمات", "قسم الصيانة والتنظيف", "الموردين الخارجيين فقط", "المنافسين في السوق"], correct: 0, explanation: "تشجيع تدفق الأفكار والإبداع هو أحد التحديات الرئيسية لإدارة المعرفة[span_55](start_span)[span_55](end_span)." },
+                    { id: 57, moduleIndex: 2, question: "إدارة المعرفة تتطلب استثمارات مالية وجهداً في:", options: ["التوثيق والتكنولوجيا والتدريب", "شراء الأثاث المكتبي فقط", "دفع الإيجارات العقارية", "الرحلات الترفيهية"], correct: 0, explanation: "إدارة المعرفة مكلفة وتحتاج استثمارات في التوثيق والتكنولوجيا والتدريب[span_56](start_span)[span_56](end_span)." },
+                    { id: 58, moduleIndex: 2, question: "الاعتماد على التكنولوجيا وحدها دون تدريب الأفراد يؤدي إلى:", options: ["نجاح باهر", "فشل المبادرة لأن الإنسان هو اساس الفهم", "توفير التكاليف", "سرعة الإنجاز"], correct: 1, explanation: "التكنولوجيا وحدها لا تكفي والإنسان أساس الفهم والتطبيق[span_57](start_span)[span_57](end_span)." },
+                    { id: 59, moduleIndex: 2, question: "عوامل النجاح الخارجية لإدارة المعرفة تتعلق بـ:", options:ص ["البيئة المحيطة والأسواق والمنافسين والعولمة", "الهيكل التنظيمي الداخلي للشركة", "أجهزة الحاسوب الشخصية", "رواتب الموظفين"], correct: 0, explanation: "عوامل النجاح الخارجية تشمل العولمة وتعقيد الحاجات وشدة المنافسة والتوريد[span_58](start_span)[span_58](end_span)." },
+                    { id: 60, moduleIndex: 2, question: "إدارة المعرفة عملية مستمرة تهدف للتجديد بسبب:", options: ["التغير المستمر والتعلم المتجدد", "ثبات الأسواق", "عدم وجود منافسين", "انتهاء الحاجة للمعلومات"], correct: 0, explanation: "إدارة المعرفة عملية مستمرة بلا نهاية بسبب التعلم والتجديد[span_59](start_span)[span_59](end_span)." },
+
+                    // المحور الرابع (20 سؤالاً)
+                    { id: 61, moduleIndex: 3, question: "ما هو تعريف استراتيجية إدارة المعرفة؟", options: ["خارطة لاستقطاب وتكوين وتخزين ومشاركة وتوزيع المعرفة لتحقيق قيمة مضافة", "جدول الحصص الدراسية", "قائمة أسماء الموظفين", "ميزانية الأرباح اليومية"], correct: 0, explanation: "استراتيجية إدارة المعرفة هي خارطة لاستقطاب وتكوين وتخزين ومشاركة المعرفة[span_60](start_span)[span_60](end_span)." },
+                    { id: 62, moduleIndex: 3, question: "من أين تنبثق استراتيجية إدارة المعرفة؟", options: ["من استراتيجية الأعمال وتوجه برامج ومبادرات المعرفة", "من رغبة العملاء العشوائية", "من قسم الصيانة", "من القوانين المحلية"], correct: 0, explanation: "استراتيجية إدارة المعرفة تنبثق من استراتيجية الأعمال وتوجه المبادرات[span_61](start_span)[span_61](end_span)." },
+                    { id: 63, moduleIndex: 3, question: "ما هي أهمية استراتيجية إدارة المعرفة؟", options: ["استثمار الموارد المعرفية، ضبط الأصول، تحسين الأداء، ودعم الابتكار", "تقليل الإنتاج", "زيادة التكاليف بلا فائدة", "إيقاف الأنشطة"], correct: 0, explanation: "الأهمية تشمل استثمار الموارد، ضبط الأصول، تحسين الأداء ودعم الابتكار[span_62](start_span)[span_62](end_span)." },
+                    { id: 64, moduleIndex: 3, question: "ما هي مراحل تطبيق استراتيجية إدارة المعرفة (6 مراحل)؟", options: ["تحديد الأهداف، عملية عالية المستوى، احتياجات التكنولوجيا، الوضع الحالي، التنفيذ، القياس والتحسين", "التخطيط والتنفيذ فقط", "التسجيل والإلغاء", "الشراء والبيع"], correct: 0, explanation: "مراحل التطبيق 6 تبدأ بتحديد الأهداف وتنتهي بالقياس والتحسين[span_63](start_span)[span_63](end_span)." },
+                    { id: 65, moduleIndex: 3, question: "تقييم الوضع الحالي في استراتيجية المعرفة يركز على 5 جوانب هي:", options: ["الأشخاص، العمليات، التكنولوجيا، الهيكل، الثقافة وتحديد الفجوات", "الأرباح، الخسارة، الأسهم، البنوك، الديون", "المباني، الكابلات، الأثاث، الإضاءة، الديكور", "المدير، الموظف، العميل، المورد، المنافس"], correct: 0, explanation: "التقييم يركز على الأشخاص، العمليات، التكنولوجيا، الهيكل، والثقافة لتحديد الفجوات[span_64](start_span)[span_64](end_span)." },
+                    { id: 66, moduleIndex: 3, question: "ما هي متطلبات التطبيق الأساسية (4 متطلبات)؟", options: ["دعم الإدارة العليا، التدريب والمشاركة، بنية معلومات مناسبة، استمرار التعلم واكتساب الخبرات", "أجهزة حديثة فقط بدون تدريب", "إغلاق الإدارة العليا", "منع التدريب"], correct: 0, explanation: "متطلبات التطبيق هي دعم الإدارة العليا، التدريب والمشاركة، بنية معلومات، واستمرار التعلم[span_65](start_span)[span_65](end_span)." },
+                    { id: 67, moduleIndex: 3, question: "استراتيجيات كارل ويغ (Wiig) تتضمن:", options: ["النمو التدريجي، التبني المتروي والحذر، ودعم وجهات النظر المتقدمة والفاعلة", "الترميز والشخصية فقط", "جانب العرض والطلب فقط", "الاستحواذ الفوري"], correct: 0, explanation: "ويغ يقترح: النمو التدريجي، التبني المتروي، ودعم وجهات النظر المتقدمة[span_66](start_span)[span_66](end_span)." },
+                    { id: 68, moduleIndex: 3, question: "ما هي أنواع الاستراتيجيات من حيث الترميز والشخصية (Hansen)؟", options: ["الترميزية (تخزين في قواعد بيانات) والشخصية (مشاركة عبر الاتصال المباشر)", "الداخلية والخارجية", "المادية والمعنوية", "القصيرة والطويلة"], correct: 0, explanation: "الترميزية تخزن بقواعد بيانات، والشخصية عبر الاتصال المباشر بين الأفراد[span_67](start_span)[span_67](end_span)." },
+                    { id: 69, moduleIndex: 3, question: "ما هي أنواع الاستراتيجيات من حيث جانب العرض والطلب؟", options: ["جانب العرض (نشر المعرفة الحالية) وجانب الطلب (توليد المعرفة الجديدة)", "جانب البيع وجانب الشراء", "جانب الإدارة وجانب العمال", "جانب التخزين وجانب الحذف"], correct: 0, explanation: "جانب العرض لنشر المعرفة الحالية، وجانب الطلب لتوليد المعرفة الجديدة[span_68](start_span)[span_68](end_span)." },
+                    { id: 70, moduleIndex: 3, question: "من أهم نماذج إدارة المعرفة في المقرر:", options: ["Takeuchi & Nonaka، Boisot، Wiig، Hansen", "نموذج نيوتن للجاذبية", "نموذج آينشتاين النسبي", "نموذج مندل الوراثي"], correct: 0, explanation: "أهم النماذج هي تاكيوتشي ونوناكا، بواسوت، ويغ، وهانسن[span_69](start_span)[span_69](end_span)." },
+                    { id: 71, moduleIndex: 3, question: "نموذج Takeuchi & Nonaka يركز على:", options: ["تحويل المعرفة بين الضمنية والصريحة وبين الفرد والجماعة", "حساب الميزانية المالية", "صيانة الأجهزة البرمجية", "إدارة المستودعات"], correct: 0, explanation: "تاكيوتشي ونوناكا يركزان على تحويل المعرفة بين الضمنية والصريحة وبين الفرد والجماعة[span_70](start_span)[span_70](end_span)." },
+                    { id: 72, moduleIndex: 3, question: "نموذج Boisot (بواسوت) يمر بعمليات تشمل:", options: ["المسح، حل المشكلات، التجريد، نشر المعرفة، التعليم والتطبيق", "البيع، الشراء، التخزين، التسليم", "التخطيط، التنفيذ، المراجعة", "الفتح، الإغلاق، الأرشفة"], correct: 0, explanation: "بواسوت يشمل المسح، حل المشكلات، التجريد، نشر المعرفة، التعليم والتطبيق[span_71](start_span)[span_71](end_span)." },
+                    { id: 73, moduleIndex: 3, question: "نموذج Wiig (ويغ) يعتبر المعرفة بمثابة:", options: ["أعمال، إدارة الأصول، تطوير المهارات، خلقها ونقلها وفهم حاجات المستفيدين", "سلعة استهلاكية رخيصة", "ملفات تالفة", "برامج حاسوبية منتهية"], correct: 0, explanation: "ويغ يرى المعرفة كأعمال وإدارة أصول وتطوير مهارات وخلق ونقل وفهم حاجات المستفيدين[span_72](start_span)[span_72](end_span)." },
+                    { id: 74, moduleIndex: 3, question: "الاستراتيجية الترميزية تعتمد أساساً على:", options: ["تخزين وترميز المعرفة في قواعد بيانات لتكون متاحة", "الاجتماعات الشفهية اليومية", "الخبرات غير الموثقة", "الذاكرة البشرية وحدها"], correct: 0, explanation: "الترميزية تعتمد على تخزين وترميز المعرفة في قواعد بيانات[span_73](start_span)[span_73](end_span)." },
+                    { id: 75, moduleIndex: 3, question: "الاستراتيجية الشخصية (Personalization) تعتمد على:", options: ["مشاركة المعرفة عبر الاتصال المباشر بين الأشخاص", "قواعد البيانات الضخمة", "الوثائق المكتوبة فقط", "الأقراص الصلبة"], correct: 0, explanation: "الشخصية تعتمد على مشاركة المعرفة عبر الاتصال المباشر والخبرات الشخصية[span_74](start_span)[span_74](end_span)." },
+                    { id: 76, moduleIndex: 3, question: "دعم الإدارة العليا يعتبر متطلباً أساسياً لـ:", options: ["نجاح تطبيق استراتيجية إدارة المعرفة", "إفلاس الشركة", "زيادة المشكلات الإدارية", "إلغاء الأقسام التقنية"], correct: 0, explanation: "دعم الإدارة العليا متطلب أساسي لتطبيق استراتيجية إدارة المعرفة بنجاح[span_75](start_span)[span_75](end_span)." },
+                    { id: 77, moduleIndex: 3, question: "مرحلة التنفيذ في تطبيق الاستراتيجية تأتي بعد:", options: ["تحديد الأهداف، العمليات، التكنولوجيا وتقييم الوضع الحالي", "مرحلة القياس النهائي مباشرة", "إغلاق الشركة", "بيع الأصول"], correct: 0, explanation: "التنفيذ يأتي بعد تحديد الأهداف وتقييم الوضع الحالي واحتياجات التكنولوجيا[span_76](start_span)[span_76](end_span)." },
+                    { id: 78, moduleIndex: 3, question: "تقييم الوضع الحالي في استراتيجية المعرفة يهدف إلى:", options: ["تحديد الفجوات بين الواقع والمطلوب في الأشخاص والعمليات والتقنية", "مدح العاملين بلا قياس", "زيادة ساعات العمل العشوائية", "إلغاء التدريب"], correct: 0, explanation: "التقييم يركز على الأشخاص والعمليات والتقنية والهيكل والثقافة وتحديد الفجوات[span_77](start_span)[span_77](end_span)." },
+                    { id: 79, moduleIndex: 3, question: "استراتيجية جانب العرض تهدف إلى:", options: ["نشر المعرفة الحالية وإتاحتها للمستخدمين", "توليد معرفة جديدة كلياً غير موجودة", "جمع الضرائب", "إيقاف النشر"], correct: 0, explanation: "جانب العرض يركز على نشر المعرفة الحالية[span_78](start_span)[span_78](end_span)." },
+                    { id: 80, moduleIndex: 3, question: "استراتيجية جانب الطلب تهدف إلى:", options: ["توليد المعرفة الجديدة عند الحاجة إليها", "حذف قواعد البيانات", "الاحتفاظ بالمعلومات القديمة", "منع الابتكار"], correct: 0, explanation: "جانب الطلب يركز على توليد المعرفة الجديدة واستقطابها[span_79](start_span)[span_79](end_span)." },
+
+                    // المحور الخامس (20 سؤالاً)
+                    { id: 81, moduleIndex: 4, question: "ما هو تعريف نظم إدارة المعرفة؟", options: ["أنظمة وتقنيات تدعم جمع وإدارة ونشر المعرفة وتحفظها وتسترجعها لتعزيز الفهم والتعاون", "ألعاب فيديو ترفيهية", "برامج لحساب رواتب الموظفين ورسوم المياه", "شاشات عرض إلكترونية"], correct: 0, explanation: "نظم إدارة المعرفة هي أنظمة وتقنيات تدعم جمع وإدارة ونشر المعرفة وتعزيز الفهم[span_80](start_span)[span_80](end_span)." },
+                    { id: 82, moduleIndex: 4, question: "من خصائص وأهداف نظم إدارة المعرفة:", options: ["تحسين إنتاج المعرفة الجديدة وزيادة تبادلها ودعم دورة حياتها", "إخفاء المعرفة عن الأقسام الأخرى", "تقليل الفاعلية التنظيمية", "التركيز على البيانات الخام فقط وإهمال المعرفة"], correct: 0, explanation: "الأهداف تشمل تحسين إنتاج المعرفة، زيادة تبادلها ودعم دورة حياتها[span_81](start_span)[span_81](end_span)." },
+                    { id: 83, moduleIndex: 4, question: "ما هي نظم عمليات إدارة المعرفة (4 أنواع رئيسية)؟", options: ["اكتشاف المعرفة، امتلاك المعرفة، مشاركة المعرفة، تطبيق المعرفة", "بيع، شراء، تخزين، توزيع", "تخطيط، تنفيذ، رقابة، تقييم", "إدخال، حذف، تعديل، طباعة"], correct: 0, explanation: "نظم عمليات إدارة المعرفة تشمل الاكتشاف، الامتلاك، المشاركة، والتطبيق[span_82](start_span)[span_82](end_span)." },
+                    { id: 84, moduleIndex: 4, question: "عملية اكتشاف المعرفة تعني:", options: ["توليد معرفة جديدة من البيانات والمعلومات أو دمج المعارف السابقة", "سرقة أسرار المنافسين", "إغلاق قواعد البيانات", "فقدان الملفات المهمة"], correct: 0, explanation: "اكتشاف المعرفة هو توليد معرفة جديدة من البيانات أو دمج المعارف السابقة[span_83](start_span)[span_83](end_span)." },
+                    { id: 85, moduleIndex: 4, question: "عملية امتلاك المعرفة تعني:", options: ["الحصول على المعرفة الداخلية والخارجية من الخبراء والاستشاريين والعملاء والموردين", "استئجار المباني", "شراء الأثاث المكتبي", "حذف المستندات القديمة"], correct: 0, explanation: "امتلاك المعرفة هو الحصول عليها من الخبراء والاستشاريين والعملاء والموردين[span_84](start_span)[span_84](end_span)." },
+                    { id: 86, moduleIndex: 4, question: "عملية مشاركة المعرفة تهدف إلى:", options: ["تمكين أعضاء المنظمة من الوصول إلى المعرفة الصريحة والضمنية لدى بعضهم", "منع الموظفين من التواصل", "حجز المعلومات في الأقسام الفردية", "إتلاف الوثائق المشتركة"], correct: 0, explanation: "مشاركة المعرفة تمكن الأعضاء من الوصول للمعرفة الصريحة والضمنية[span_85](start_span)[span_85](end_span)." },
+                    { id: 87, moduleIndex: 4, question: "عملية تطبيق المعرفة تعني:", options: ["استخدام معرفة الآخرين في العمل عبر التوجيه والإجراءات والروتين", "الاحتفاظ بالمعلومات دون استخدام", "نسخ الملفات بدون قراءة", "إهمال الخبرات السابقة"], correct: 0, explanation: "تطبيق المعرفة هو استخدام معرفة الآخرين عبر التوجيه والإجراءات والروتين[span_86](start_span)[span_86](end_span)." },
+                    { id: 88, moduleIndex: 4, question: "من الأنواع المهمة لنظم إدارة المعرفة:", options: ["النظم الخبيرة ونظم التفكير على أساس الحالات (Case-Based Reasoning)", "نظم الحسابات البنكية العادية", "برامج تشغيل الصوتيات والمرئيات", "ألعاب المحاكاة الترفيهية"], correct: 0, explanation: "الأنواع المهمة تشمل النظم الخبيرة ونظم التفكير على أساس الحالات[span_87](start_span)[span_87](end_span)." },
+                    { id: 89, moduleIndex: 4, question: "النظم الخبيرة (Expert Systems) تتكون أساساً من 3 مكونات هي:", options: ["قاعدة معرفة، آلة استدلال، واجهة للمستخدم", "شاشة، لوحة مفاتيح، فأرة", "قاعدة بيانات، شبكة إنترنت، طابعة", "مدير، موظف، عميل"], correct: 0, explanation: "النظم الخبيرة تتكون أساساً من قاعدة معرفة، آلة استدلال، واجهة للمستخدم[span_88](start_span)[span_88](end_span)." },
+                    { id: 90, moduleIndex: 4, question: "ما هو دور نظم التفكير على أساس الحالات (CBR)؟", options: ["استرجاع حالات سابقة مشابهة للمشكلة الحالية للاستفادة من حلولها وتعديلها", "حذف الحالات القديمة نهائياً", "توليد مشكلات جديدة للشركة", "تجاهل الخبرات السابقة تماماً"], correct: 0, explanation: "نظم الحالات تسترجع حالات سابقة مشابهة للمشكلة الحالية للاستفادة من حلولها[span_89](start_span)[span_89](end_span)." },
+                    { id: 91, moduleIndex: 4, question: "قاعدة المعرفة في النظم الخبيرة تعبر عن:", options: ["المستودع الذي يضم خبرات ومعارف الخبراء البشريين", "قائمة أسماء الموظفين", "أرشيف فواتير الكهرباء", "سجل الحضور اليومي"], correct: 0, explanation: "قاعدة المعرفة تمثل معرفة الخبراء وتخزنها لدعم القرارات[span_90](start_span)[span_90](end_span)." },
+                    { id: 92, moduleIndex: 4, question: "آلة الاستدلال (Inference Engine) في النظم الخبيرة تعمل على:", options: ["تطبيق القواعد على قاعدة المعرفة لاستنتاج الحلول والقرارات", "تخزين الملفات الورقية", "عرض الصور على الشاشة", "طباعة التقارير المالية"], correct: 0, explanation: "آلة الاستدلال تستدل وتستنتج الحلول باستخدام قاعدة المعرفة[span_91](start_span)[span_91](end_span)." },
+                    { id: 93, moduleIndex: 4, question: "واجهة المستخدم (User Interface) في نظم إدارة المعرفة تتيح:", options: ["التفاعل بين المستخدم والنظام بسهولة", "إتلاف البيانات برمجياً", "فصل التيار الكهربائي عن الحاسوب", "منع المستخدم من إدخال البيانات"], correct: 0, explanation: "واجهة المستخدم تدعم التفاعل وسولة الاستخدام[span_92](start_span)[span_92](end_span)." },
+                    { id: 94, moduleIndex: 4, question: "نظم إدارة المعرفة تركز بشكل أساسي على:", options: ["المعرفة لا البيانات فقط", "البيانات الخام غير المنظمة فقط", "الأرقام الحسابية البسيطة", "إلغاء دور الأفراد"], correct: 0, explanation: "نظم إدارة المعرفة تهدف لتركيز الجهد على المعرفة لا البيانات فقط[span_93](start_span)[span_93](end_span)." },
+                    { id: 95, moduleIndex: 4, question: "دعم دورة حياة المعرفة يشمل:", options: ["التوليد، التخزين، المشاركة والتطبيق", "الحذف، التعديل، الإخفاء فقط", "البيع، الشراء، الإيجار", "الطباعة، التمزيق، الرمي"], correct: 0, explanation: "دورة حياة المعرفة تغطي توليدها، توفيرها، حفظها، مشاركتها وتطبيقها[span_94](start_span)[span_94](end_span)." },
+                    { id: 96, moduleIndex: 4, question: "رفع الفاعلية التنظيمية يُعد من:", options: ["أهداف وخصائص نظم إدارة المعرفة", "الأمور الضارة بالمنظمة", "المشكلات التقنية الصعبة", "الأنشطة الترفيهية"], correct: 0, explanation: "رفع الفاعلية التنظيمية وتعزيز التعاون من الأهداف الرئيسية للنظم[span_95](start_span)[span_95](end_span)." },
+                    { id: 97, moduleIndex: 4, question: "الحصول على المعرفة الداخلية والخارجية يتم عبر نظم:", options: ["امتلاك المعرفة", "إتلاف المعرفة", "تجميد المعرفة", "حجب المعرفة"], correct: 0, explanation: "نظم امتلاك المعرفة تحصل عليها من الخبراء والاستشاريين والعملاء[span_96](start_span)[span_96](end_span)." },
+                    { id: 98, moduleIndex: 4, question: "استخدام معرفة الآخرين في العمل عبر الإجراءات يمثل نظم:", options: ["تطبيق المعرفة", "إلغاء المعرفة", "بيع المعرفة", "تخزين البيانات الخام"], correct: 0, explanation: "تطبيق المعرفة يتم عبر استخدام معرفة الآخرين بالعمل والتوجيه[span_97](start_span)[span_97](end_span)." },
+                    { id: 99, moduleIndex: 4, question: "تمكين الأعضاء من الوصول للمعرفة الضمنية والصريحة يتم عبر نظم:", options: ["مشاركة المعرفة", "عزل المعرفة", "تشفير المعرفة نهائياً", "مسح المعرفة"], correct: 0, explanation: "نظم مشاركة المعرفة تمكن الأعضاء من الوصول لمعارف بعضهم[span_98](start_span)[span_98](end_span)." },
+                    { id: 100, moduleIndex: 4, question: "توليد معرفة جديدة من دمج المعارف السابقة يسمى نظم:", options: ["اكتشاف المعرفة", "أرشفة الملفات", "حساب الرواتب", "الصيانة الوقائية"], correct: 0, explanation: "اكتشاف المعرفة يولد معرفة جديدة من البيانات والمعلومات أو دمج المعارف[span_99](start_span)[span_99](end_span)." },
+
+                    // المحور السادس (20 سؤالاً)
+                    { id: 101, moduleIndex: 5, question: "المرحلة الأولى من مراحل تطبيق إدارة المعرفة هي:", options: ["مرحلة المبادرة وبناء (البنية التحتية، العلاقات، الحوافز، الثقافة، اتصالات)", "مرحلة التكامل الخارجي", "مرحلة التصفية", "مرحلة الإغلاق"], correct: 0, explanation: "المرحلة الأولى هي المبادرة وتشمل بناء البنية التحتية والعلاقات والحوافز والثقافة[span_100](start_span)[span_100](end_span)." },
+                    { id: 102, moduleIndex: 5, question: "المرحلة الثانية لتطبيق إدارة المعرفة هي:", options: ["مرحلة النشر (تبرير الأفكار، وضع السياسات، تحليل بالأحدث، مراقبة وتحكيم)", "مرحلة المبادرة فقط", "مرحلة البيع والشراء", "مرحلة التخزين المؤقت"], correct: 0, explanation: "المرحلة الثانية هي النشر وتشمل تبرير الأفكار ووضع السياسات وتحليلها ومراقبتها[span_101](start_span)[span_101](end_span)." },
+                    { id: 103, moduleIndex: 5, question: "المرحلة الثالثة لتطبيق إدارة المعرفة هي:", options: ["مرحلة التكامل الداخلي (هيكلة المعرفة ورسم خرائطها، محركات البحث، قياس الأداء، المعرفة المتكاملة)", "مرحلة السفر الخارجي", "مرحلة إيقاف الأنشطة", "مرحلة الأرشفة الورقية"], correct: 0, explanation: "المرحلة الثالثة التكامل الداخلي وتشمل هيكلة المعرفة وخرائطها ومحركات البحث وقياس الأداء[span_102](start_span)[span_102](end_span)." },
+                    { id: 104, moduleIndex: 5, question: "المرحلة الرابعة والأخيرة لتطبيق إدارة المعرفة هي:", options: ["مرحلة التكامل الخارجي (التعاون والشبكات، مؤتمرات عن بعد، بريد إلكتروني ونظم مشاركة، معرفة شبكية)", "مرحلة البداية", "مرحلة إلغاء التقنية", "مرحلة العمل اليدوي"], correct: 0, explanation: "المرحلة الرابعة التكامل الخارجي وتشمل التعاون والشبكات والمؤتمرات والبريد الإلكتروني[span_103](start_span)[span_103](end_span)." },
+                    { id: 105, moduleIndex: 5, question: "كيف يُعرّف قياس إدارة المعرفة؟", options: ["تقييم وتنظيم وبناء رأس المال المعلوماتي والمعرفي/الفكري للمنظمة", "حساب الديون المصرفية فقط", "عدّ عدد أجهزة الحاسوب في الشركة", "تقدير إيجار المباني"], correct: 0, explanation: "قياس إدارة المعرفة هو تقييم وتنظيم وبناء رأس المال المعلوماتي والفكرى للمنظمة[span_104](start_span)[span_104](end_span)[span_105](start_span)[span_105](end_span)." },
+                    { id: 106, moduleIndex: 5, question: "قيمة المعرفة تتحدد بمدى قدرتها على:", options: ["تقليل عدم التأكد في القرار واستفادة المستخدم منها", "زيادة الغموض وتعقيد العمل", "تأخير اتخاذ القرارات", "إخفاء الحقائق عن الإدارة"], correct: 0, explanation: "قيمة المعرفة تقلل عدم التأكد في القرار وتعتمد على استستفادة المستخدم منها[span_106](start_span)[span_106](end_span)." },
+                    { id: 107, moduleIndex: 5, question: "الشرط الأساسي لجدوى الحصول على المعرفة هو أن:", options: ["تكون قيمة المعرفة أكبر من أو مساوية لتكلفة الحصول عليها", "تكون تكلفة المعرفة مضاعفة لقيمتها", "تكون المعرفة مجانية تماماً بلا أي استثمار", "تكون المعرفة غير مفيدة"], correct: 0, explanation: "يجب أن تكون قيمة المعرفة أكبر من أو مساوية لتكلفة الحصول عليها[span_107](start_span)[span_107](end_span)." },
+                    { id: 108, moduleIndex: 5, question: "من المؤشرات المهمة لقياس إدارة المعرفة (4 مؤشرات):", options: ["مخزون وتدفق المعرفة، إنتاج المعرفة، شبكات المعرفة، اكتساب المعرفة", "الأرباح، الخسائر، الضرائب، الإيجارات", "عدد الكراسي، عدد الطاولات، ألوان الجدران، الإضاءة", "أعمار الموظفين، أطوالهم، أوزانهم، تخصصاتهم الثانوية"], correct: 0, explanation: "المؤشرات الأربعة هي مخزون وتدفق المعرفة، إنتاج المعرفة، شبكات المعرفة، واكتساب المعرفة[span_108](start_span)[span_108](end_span)." },
+                    { id: 109, moduleIndex: 5, question: "من مؤشرات إنتاج المعرفة في المنظمة (3 مؤشرات):", options: ["الإنفاق على البحث والتطوير، المبيعات الناتجة عن براءات الاختراع والمنتجات الجديدة، نسبة عمال المعرفة", "عدد أجهزة التكييف المعطلة", "كمية استهلاك المياه والكهرباء", "عدد الساعات الضائعة في الاستراحة"], correct: 0, explanation: "مؤشرات الإنتاج تشمل الإنفاق على R&D، مبيعات المنتجات الجديدة وبراءات الاختراع، ونسبة عمال المعرفة[span_109](start_span)[span_109](end_span)." },
+                    { id: 110, moduleIndex: 5, question: "لماذا يُعتبر قياس إدارة المعرفة أمراً صعباً؟", options: ["لأن المعرفة أصل غير ملموس، لذلك تستخدم المنظمة مؤشرات كمية ونوعية مرتبطة بالأداء", "لسهولة تداولها الرقمي", "لوفرة الأرقام المالية الواضحة", "لأنها مواد صلبة مرئية"], correct: 0, explanation: "القياس صعب لأن المعرفة أصل غير ملموس؛ لذا تستخدم مؤشرات كمية ونوعية[span_110](start_span)[span_110](end_span)." },
+                    { id: 111, moduleIndex: 5, question: "بناء البنية التحتية والعلاقات والحوافز والثقافة يتم في أي مرحلة؟", options: ["مرحلة المبادرة (الأولى)", "مرحلة التكامل الخارجي (الرابعة)", "مرحلة التكامل الداخلي (الثالثة)", "مرحلة النشر (الثانية)"], correct: 0, explanation: "المرحلة الأولى المبادرة تشمل البنية التحتية، العلاقات، الحوافز، الثقافة واتصالات[span_111](start_span)[span_111](end_span)." },
+                    { id: 112, moduleIndex: 5, question: "تبرير الأفكار ووضع السياسات وتحليلها بالتكنولوجيا يتم في مرحلة:", options: ["النشر (الثانية)", "المبادرة (الأولى)", "التكامل الخارجي", "القياس النهائي"], correct: 0, explanation: "مرحلة النشر تشمل تبرير الأفكار، وضع السياسات، تحليلها بالتكنولوجيا والمراقبة[span_112](start_span)[span_112](end_span)." },
+                    { id: 113, moduleIndex: 5, question: "هيكلة المعرفة ورسم خرائطها واستخدام محركات البحث يتم في مرحلة:", options: ["التكامل الداخلي (الثالثة)", "المبادرة الأولى", "التكامل الخارجي", "مرحلة الإعداد"], correct: 0, explanation: "التكامل الداخلي يشمل هيكلة المعرفة ورسم خرائطها ومحركات البحث وقياس الأداء[span_113](start_span)[span_113](end_span)." },
+                    { id: 114, moduleIndex: 5, question: "التعاون والشبكات والمؤتمرات عن بعد ونظم المشاركة تتم في مرحلة:", options: ["التكامل الخارجي (الرابعة)", "المبادرة الأولى", "النشر الثانية", "التكامل الداخلي"], correct: 0, explanation: "التكامل الخارجي يشمل التعاون والشبكات والمؤتمرات والبريد ونظم المشاركة[span_114](start_span)[span_114](end_span)." },
+                    { id: 115, moduleIndex: 5, question: "تقييم وتنظيم وبناء رأس المال المعرفي والفكري يُعرف بـ:", options: ["قياس إدارة المعرفة", "إدارة الحسابات البنكية", "المحاسبة الضريبية", "إدارة المخازن"], correct: 0, explanation: "قياس إدارة المعرفة هو تقييم وتنظيم وبناء رأس المال المعلوماتي والمعرفي[span_115](start_span)[span_115](end_span)[span_116](start_span)[span_116](end_span)." },
+                    { id: 116, moduleIndex: 5, question: "هل تؤدي المعرفة إلى تقليل عدم التأكد في القرار؟", options: ["نعم، تقلل عدم التأكد وتدعم اتخاذ القرار", "لا علاقة لها بالقرارات", "تزيد الغموض وتصعب القرارات", "تُلغي اتخاذ القرارات نهائياً"], correct: 0, explanation: "قيمة المعرفة تقلل عدم التأكد في القرار وتعتمد على الاستفادة منها[span_117](start_span)[span_117](end_span)." },
+                    { id: 117, moduleIndex: 5, question: "من مؤشرات قياس المعرفة المتعلقة بالشبكات:", options: ["شبكات المعرفة واكتسابها ومخزونها وتدفقها", "عدد غرف الاجتماعات الفيزيائية", "سرعة شبكة الكهرباء العامة", "عدد السيارات المملوكة للموظفين"], correct: 0, explanation: "من مؤشرات القياس مخزون وتدفق المعرفة، إنتاجها، شبكات المعرفة واكتسابها[span_118](start_span)[span_118](end_span)." },
+                    { id: 118, moduleIndex: 5, question: "النسبة المئوية لعمال المعرفة في المنظمة تُعتبر من مؤشرات:", options: ["إنتاج المعرفة", "الإنفاق المالي الصرف", "استهلاك الطاقة", "مواقف السيارات"], correct: 0, explanation: "من مؤشرات الإنفاق بنود البحث والتطوير ومبيعات المنتجات الجديدة ونسبة عمال المعرفة[span_119](start_span)[span_119](end_span)." },
+                    { id: 119, moduleIndex: 5, question: "مراقبة المعرفة والتحكيم تعتبر جزءاً أساسياً من مرحلة:", options: ["النشر (المرحلة الثانية)", "المبادرة", "التكامل الداخلي", "التكامل الخارجي"], correct: 0, explanation: "مرحلة النشر تشمل تبرير الأفكار، وضع السياسات، تحليلها، ومراقبة المعرفة والتحكيم[span_120](start_span)[span_120](end_span)." },
+                    { id: 120, moduleIndex: 5, question: "الحصول على المعرفة المتكاملة يتم ضمن أنشطة:", options: ["التكامل الداخلي", "المبادرة الأولى", "النشر المبكر", "التعاون الخارجي المطلق"], correct: 0, explanation: "التكامل الداخلي يشمل هيكلة المعرفة وخرائطها ومحركات البحث والحصول على المتكاملة[span_121](start_span)[span_121](end_span)." },
+
+                    // المحور السابع (20 سؤالاً)
+                    { id: 121, moduleIndex: 6, question: "في كم مجال تؤثر إدارة المعرفة على المنظمة؟", options: ["4 مجالات (العاملين، العمليات، المنتجات، والأداء العام)", "مجال واحد فقط", "مجلان فقط", "عشرة مجالات"], correct: 0, explanation: "تؤثر إدارة المعرفة في 4 مجالات: العاملين، العمليات، المنتجات، والأداء[span_122](start_span)[span_122](end_span)." },
+                    { id: 122, moduleIndex: 6, question: "تأثير إدارة المعرفة على العاملين يشمل:", options: ["توسيع الخبرات والمعارف، دعم التعلم المستمر، وزيادة المرونة والرضا الوظيفي", "تقييد القدرة على التكيف", "خفض الرضا الوظيفي", "تقليل المهارات"], correct: 0, explanation: "التأثير على العاملين يشمل توسيع الخبرات، التعلم المستمر، المرونة والرضا الوظيفي[span_123](start_span)[span_123](end_span)." },
+                    { id: 123, moduleIndex: 6, question: "كيف يتم التعلم لدى العاملين في سياق إدارة المعرفة؟", options: ["عبر تجسيد المعرفة ودمجها والتفاعل الاجتماعي والمشاركة", "عبر العزل التام للموظفين", "بالحفظ والتلقين الفردي بلا تفاعل", "عبر ترك العمل"], correct: 0, explanation: "التعلم يتم عبر تجسيد المعرفة ودمجها والتفاعل الاجتماعي والمشاركة[span_124](start_span)[span_124](end_span)." },
+                    { id: 124, moduleIndex: 6, question: "تأثير إدارة المعرفة على العمليات يتضمن تحسين:", options: ["الفاعلية، الكفاءة، والابتكار", "التكاليف بلا فائدة", "نسبة الأخطاء المتكررة", "بطء الإجراءات"], correct: 0, explanation: "على العمليات تحسين الفاعلية والكفاءة والابتكار وتقليل الأخطاء[span_125](start_span)[span_125](end_span)." },
+                    { id: 125, moduleIndex: 6, question: "تحسين العمليات بفضل إدارة المعرفة يشمل:", options: ["تقليل تكرار الأخطاء، دعم اختيار العمليات المناسبة، خفض التكاليف وتحفيز حلول مبتكرة", "زيادة تكرار الأخطاء وتضخيم التكاليف", "إلغاء العمليات كلياً", "الاعتماد على العشوائية"], correct: 0, explanation: "يشمل تقليل الأخطاء، اختيار العمليات المناسبة، خفض التكاليف وتحفيز حلول مبتكرة[span_126](start_span)[span_126](end_span)." },
+                    { id: 126, moduleIndex: 6, question: "تأثير إدارة المعرفة على المنتجات يتضمن:", options: ["تحسين المنتجات القائمة، تقديم منتجات ذات قيمة مضافة ومبنية على المعرفة", "إلغاء المنتجات القديمة دون بديل", "إنتاج سلع رديئة", "تقليل جودة الخدمات"], correct: 0, explanation: "على المنتجات تحسين القائمة وتقديم منتجات ذات قيمة مضافة ومبنية على المعرفة[span_127](start_span)[span_127](end_span)." },
+                    { id: 127, moduleIndex: 6, question: "تنقسم آثار إدارة المعرفة على الأداء إلى نوعين هما:", options: ["تأثير مباشر (منتجات وعوائد وربط استراتيجية المعرفة بالعمل) وتأثير غير مباشر (قيادة وتعلم وولاء)", "تأثير داخلي وخارجي فقط", "تأثير مالي وإداري فقط", "تأثير قصير وطويل الأجل فقط"], correct: 0, explanation: "الأداء له تأثير مباشر (منتجات وعوائد واستراتيجية) وتأثير غير مباشر (قيادة وتعلم وولاء)[span_128](start_span)[span_128](end_span)." },
+                    { id: 128, moduleIndex: 6, question: "أي من نوعي تأثير الأداء يعتبر أصعب في القياس؟", options: ["التأثير غير مباشر (تحسين القيادة والتعلم والولاء والقدرات)", "التأثير المباشر (العوائد المالية)", "قياس عدد المنتجات المباعة", "حساب الأرباح النقدية الصافية"], correct: 0, explanation: "التأثير غير المباشر (تحسين القيادة والتعلم والولاء) هو الأصعب في القياس[span_129](start_span)[span_129](end_span)." },
+                    { id: 129, moduleIndex: 6, question: "زيادة المرونة والرضا الوظيفي تعتبر من آثار إدارة المعرفة على:", options: ["العاملين", "العمليات التشغيلية", "المنتجات المباعة", "المنافسين في السوق"], correct: 0, explanation: "زيادة المرونة والرضا الوظيفي وتوسيع الخبرات هي آثار على العاملين[span_130](start_span)[span_130](end_span)." },
+                    { id: 130, moduleIndex: 6, question: "خفض التكاليف وتحفيز حلول مبتكرة تعتبر من آثار إدارة المعرفة على:", options: ["العمليات", "العاملين", "المنافسين الخارجيين", "الحكومة"], correct: 0, explanation: "خفض التكاليف وتقليل الأخطاء وتحسين الكفاءة هي آثار على العمليات[span_131](start_span)[span_131](end_span)." },
+                    { id: 131, moduleIndex: 6, question: "تقديم منتجات مبنية على المعرفة وذات قيمة مضافة يؤثر على:", options: ["المنتجات", "العاملين فقط", "المباني والمنشآت", "البرمجيات الداخلية"], correct: 0, explanation: "تقديم منتجات مبنية على المعرفة وذات قيمة مضافة هو أثر على المنتجات[span_132](start_span)[span_132](end_span)." },
+                    { id: 132, moduleIndex: 6, question: "ربط استراتيجية المعرفة باستراتيجية العمل يحقق:", options: ["تأثيراً مباشراً على الأداء (منتجات وعوائد مالية)", "فشلاً ذريعاً للشركة", "خسائر تشغيلية ضخمة", "ركوداً في المبيعات"], correct: 0, explanation: "التأثير المباشر يشمل منتجات جديدة وعوائد مالية وربط استراتيجية المعرفة بالعمل[span_133](start_span)[span_133](end_span)." },
+                    { id: 133, moduleIndex: 6, question: "تحسين القدرة على التكيف ودعم التعلم المستمر يؤثر إيجاباً على:", options: ["العاملين", "أجهزة الحاسوب فقط", "الشبكات السلكية", "الأثاث المكتبي"], correct: 0, explanation: "دعم التعلم المستمر والتكيف وتوسيع الخبرات يؤثر على العاملين[span_134](start_span)[span_134](end_span)." },
+                    { id: 134, moduleIndex: 6, question: "تقليل تكرار الأخطاء في إنجاز المهام يعتبر تحسناً في:", options: ["العمليات", "المنتجات", "الأداء غير المباشر", "العملاء الجدد"], correct: 0, explanation: "تقليل تكرار الأخطاء وخفض التكاليف هو تحسين في العمليات[span_135](start_span)[span_135](end_span)." },
+                    { id: 135, moduleIndex: 6, question: "التفاعل الاجتماعي والمشاركة بين الموظفين يؤدي إلى:", options: ["التعلم وتجسيد المعرفة", "النزاعات الإدارية", "إيقاف العمل", "تراجع الإنتاجية"], correct: 0, explanation: "التعلم يتم عبر تجسيد المعرفة ودمجها والتفاعل الاجتماعي والمشاركة[span_136](start_span)[span_136](end_span)." },
+                    { id: 136, moduleIndex: 6, question: "تحسين المنتجات القائمة وابتكار منتجات جديدة يعد أثراً لـ:", options: ["إدارة المعرفة على المنتجات", "إدارة المخازن اليدوية", "الصيانة اليومية", "إدارة الحسابات البنكية"], correct: 0, explanation: "تحسين المنتجات القائمة وتقديم منتجات بقيمة مضافة هو أثر على المنتجات[span_137](start_span)[span_137](end_span)." },
+                    { id: 137, moduleIndex: 6, question: "صعوبة قياس التأثير غير المباشر لإدارة المعرفة ترجع إلى أنه يرتبط بـ:", options: ["تحسين القيادة والتعلم والولاء والقدرات التنظيمية", "الأرقام المالية المباشرة والواضحة في الفواتير", "عدد المنتجات المصنعة بالمصنع", "تكلفة شراء المواد الخام"], correct: 0, explanation: "التأثير غير المباشر يشمل تحسين القيادة والتعلم والولاء وهو أصعب في القياس[span_138](start_span)[span_138](end_span)." },
+                    { id: 138, moduleIndex: 6, question: "تحسين الفاعلية والكفاءة والابتكار يعد من آثار إدارة المعرفة في مجال:", options: ["العمليات", "العاملين", "المنتجات", "العملاء الخارجيين"], correct: 0, explanation: "تحسين الفاعلية والكفاءة والابتكار هو تحسين في العمليات[span_139](start_span)[span_139](end_span)." },
+                    { id: 139, moduleIndex: 6, question: "العوائد المالية الناتجة عن تقديم منتجات جديدة تعتبر:", options: ["تأثيراً مباشراً على الأداء", "تأثيراً غير مباشر صعبة القياس", "أمراً خيالياً غير واقعي", "خسارة مالية"], correct: 0, explanation: "التأثير المباشر يشمل منتجات جديدة وعوائد مالية وربط استراتيجية المعرفة[span_140](start_span)[span_140](end_span)." },
+                    { id: 140, moduleIndex: 6, question: "توسيع الخبرات والمعارف للعاملين ينتج عنه:", options: ["زيادة المرونة والرضا الوظيفي والقدرة على التكيف", "الجمود الوظيفي", "كثرة الأخطاء", "فقدان المهارات"], correct: 0, explanation: "توسيع الخبرات والمعارف يدعم التعلم المستمر ويزيد المرونة والرضا الوظيفي[span_141](start_span)[span_141](end_span)." },
+
+                    // المحور الثامن (20 سؤالاً)
+                    { id: 141, moduleIndex: 7, question: "ما هو تعريف استراتيجية إدارة المعرفة في المحور الثامن؟", options: ["خارطة لاستقطاب وتكوين وتخزين ومشاركة وتوزيع المعرفة لتحقيق قيمة مضافة استراتيجية", "قائمة طعام الشركة اليومية", "جدول مواعيد الحافلات", "دليل المستخدم لأجهزة الحاسوب"], correct: 0, explanation: "تعريف الاستراتيجية هو خارطة لاستقطاب وتكوين وتخزين ومشاركة المعرفة[span_142](start_span)[span_142](end_span)." },
+                    { id: 142, moduleIndex: 7, question: "ما هي الأهمية الرئيسية لاستراتيجيات إدارة المعرفة (5 نقاط)؟", options: ["استثمار الموارد المعرفية، ضبط الأصول، تحسين الأداء، دعم الابتكار، تحديد المجالات الاستراتيجية", "زيادة الديون وإلغاء الأقسام", "تقليل الإنتاج وإغلاق المصانع", "منع الموظفين من التواصل"], correct: 0, explanation: "الأهمية: استثمار الموارد، ضبط الأصول، تحسين الأداء، دعم الابتكار، وتحديد المجالات[span_143](start_span)[span_143](end_span)." },
+                    { id: 143, moduleIndex: 7, question: "مراحل تطبيق استراتيجية المعرفة تبدأ بـ:", options: ["تحديد الأهداف", "مرحلة القياس والتحسين النهائي", "بيع الشركة للمنافسين", "إغلاق أنظمة التقنية"], correct: 0, explanation: "مراحل التطبيق تبدأ بـ تحديد الأهداف ثم عملية عالية المستوى واحتياجات التكنولوجيا[span_144](start_span)[span_144](end_span)." },
+                    { id: 144, moduleIndex: 7, question: "مراحل التطبيق (6 مراحل) تنتهي بـ:", options: ["القياس والتحسين", "التخطيط المبدئي", "تحديد الأهداف الأولى", "إلغاء المبادرة"], correct: 0, explanation: "المراحل 6: تحديد الأهداف، عملية عالية المستوى، احتياجات التكنولوجيا، الوضع الحالي، التنفيذ، القياس والتحسين[span_145](start_span)[span_145](end_span)." },
+                    { id: 145, moduleIndex: 7, question: "تقييم الوضع الحالي في الاستراتيجية يركز على تحديد الفجوات في:", options: ["الأشخاص، العمليات، التكنولوجيا، الهيكل، والثقافة", "الأرباح والخسائر المالية البحتة", "المباني والمكاتب فقط", "أسعار الصرف في البنوك"], correct: 0, explanation: "التقييم يركز على الأشخاص والعمليات والتكنولوجيا والهيكل والثقافة وتحديد الفجوات[span_146](start_span)[span_146](end_span)." },
+                    { id: 146, moduleIndex: 7, question: "متطلبات تطبيق الاستراتيجية تشمل:", options: ["دعم الإدارة العليا، التدريب والمشاركة، بنية معلومات ومعرفة مناسبة، استمرار التعلم", "تجاهل الإدارة العليا تماماً", "منع التدريب وإيقاف التعلم", "حذف قواعد البيانات"], correct: 0, explanation: "متطلبات التطبيق تشمل دعم الإدارة العليا، التدريب والمشاركة، بنية معلومات واستمرار التعلم[span_147](start_span)[span_147](end_span)." },
+                    { id: 147, moduleIndex: 7, question: "استراتيجيات Wiig (ويغ) تتضمن:", options: ["النمو التدريجي، التبني المتروي والحذر، ودعم وجهات النظر المتقدمة والفاعلة", "استراتيجية الحذف والمسح الشامل", "بيع الأصول الثابتة", "منع الابتكار التنظيمي"], correct: 0, explanation: "استراتيجيات ويغ تشمل النمو التدريجي والتبني المتروي ودعم وجهات النظر المتقدمة والفاعلة[span_148](start_span)[span_148](end_span)." },
+                    { id: 148, moduleIndex: 7, question: "استراتيجيات إدارة المعرفة تصنف من حيث النوع إلى:", options: ["ترميزية مقابل شخصية، وجانب العرض مقابل جانب الطلب", "داخلية مقابل خارجية فقط", "قصيرة المدى مقابل طويلة المدى فقط", "مادية مقابل معنوية فقط"], correct: 0, explanation: "الأنواع تصنف إلى ترميزية مقابل شخصية، وجانب العرض مقابل جانب الطلب[span_149](start_span)[span_149](end_span)." },
+                    { id: 149, moduleIndex: 7, question: "الاستراتيجية الترميزية تعتمد على:", options: ["تخزين وترميز المعرفة في قواعد بيانات وإتاحتها", "اللقاءات الشفهية المباشرة بين الأفراد", "الخبرات غير الموثقة في الذاكرة البشرية", "الرحلات الترفيهية"], correct: 0, explanation: "الترميزية تعتمد على تخزين وترميز المعرفة في قواعد بيانات[span_150](start_span)[span_150](end_span)." },
+                    { id: 150, moduleIndex: 7, question: "الاستراتيجية الشخصية تعتمد على:", options: ["مشاركة المعرفة عبر الاتصال المباشر بين الأشخاص", "قواعد البيانات الإلكترونية الضخمة", "الوثائق المطبوعة فقط", "الأقراص الصلبة المغلقة"], correct: 0, explanation: "الشخصية تعتمد على مشاركة المعرفة عبر الاتصال المباشر[span_151](start_span)[span_151](end_span)." },
+                    { id: 151, moduleIndex: 7, question: "استراتيجية جانب العرض تركز على:", options: ["نشر المعرفة الحالية المتاحة في المنظمة", "توليد معرفة جديدة كلياً غير موجودة", "حذف قواعد البيانات القديمة", "منع الموظفين من الاطلاع على المعرفة"], correct: 0, explanation: "جانب العرض يركز على نشر المعرفة الحالية وتوزيعها[span_152](start_span)[span_152](end_span)." },
+                    { id: 152, moduleIndex: 7, question: "استراتيجية جانب الطلب تركز على:", options: ["توليد المعرفة الجديدة وتلبية الاحتياجات المستجدة", "الاحتفاظ بالمعلومات القديمة وإغلاقها", "تقليل عدد الابتكارات", "تجميد الأنشطة المعرفية"], correct: 0, explanation: "جانب الطلب يركز على توليد المعرفة الجديدة وتلبية الطلب عليها[span_153](start_span)[span_153](end_span)." },
+                    { id: 153, moduleIndex: 7, question: "من أهم النماذج الاستراتيجية المذكورة في المقرر:", options: ["Takeuchi & Nonaka، Boisot، Wiig، Hansen", "نموذج فيثاغورس", "نموذج نيوتن للحركة", "نموذج ماندليف الكيميائي"], correct: 0, explanation: "أهم النماذج تشمل تاكيوتشي ونوناكا، بواسوت، ويغ، وهانسن[span_154](start_span)[span_154](end_span)." },
+                    { id: 154, moduleIndex: 7, question: "ضبط الأصول الفكرية واستثمار الموارد المعرفية يعتبر من:", options: ["أهمية استراتيجية إدارة المعرفة", "المشكلات الإدارية المعقدة", "الأمور غير ذات الصلة", "مخالفات العمل"], correct: 0, explanation: "الأهمية تشمل استثمار الموارد، ضبط الأصول، تحسين الأداء ودعم الابتكار[span_155](start_span)[span_155](end_span)." },
+                    { id: 155, moduleIndex: 7, question: "تحديد المجالات الاستراتيجية ودعم التعلم يهدف إلى:", options: ["تحسين الأداء المؤسسي واستثمار رأس المال الفكري", "زيادة الخسائر المالية", "إيقاف الابتكار", "تسريح الموظفين المتميزين"], correct: 0, explanation: "تحديد المجالات الاستراتيجية ودعم التعلم يحسن الأداء ويستثمر رأس المال الفكري[span_156](start_span)[span_156](end_span)." },
+                    { id: 156, moduleIndex: 7, question: "التدريب والمشاركة واستمرار التعلم يعتبر من:", options: ["متطلبات تطبيق الاستراتيجية الناجحة", "الأمور غير المطلوبة في الشركات", "مخالفات قواعد العمل", "مسببات فشل الإدارة"], correct: 0, explanation: "متطلبات التطبيق تشمل دعم الإدارة العليا، التدريب والمشاركة وبنية معلومات واستمرار تعلم[span_157](start_span)[span_157](end_span)." },
+                    { id: 157, moduleIndex: 7, question: "التبني المتروي والحذر يعتبر من استراتيجيات المفكر:", options: ["Karl Wiig (كارل ويغ)", "Hansen (هانسن)", "Boisot (بواسوت)", "Takeuchi (تاكيوتشي)"], correct: 0, explanation: "استراتيجيات ويغ تشمل النمو التدريجي والتبني المتروي والحذر ودعم وجهات النظر المتقدمة[span_158](start_span)[span_158](end_span)." },
+                    { id: 158, moduleIndex: 7, question: "تقييم الوضع الحالي في تطبيق الاستراتيجية يتطلب تحليل:", options: ["الأشخاص والعمليات والتكنولوجيا والهيكل والثقافة", "أسعار الأسهم في البورصة العالمية", "حالة الطقس والمناخ", "أسعار الوقود بالسوق المحلي"], correct: 0, explanation: "التقييم يركز على الأشخاص والعمليات والتكنولوجيا والهيكل والثقافة وتحديد الفجوات[span_159](start_span)[span_159](end_span)." },
+                    { id: 159, moduleIndex: 7, question: "استراتيجية المعرفة كأعمال وإدارة الأصول وتطوير المهارات تعود لـ:", options: ["Wiig (ويغ)", "Hansen (هانسن)", "Nonaka (نوناكا)", "Boisot (بواسوت)"], correct: 0, explanation: "ويغ طرح استراتيجية المعرفة كأعمال، إدارة الأصول، وتطوير المهارات[span_160](start_span)[span_160](end_span)." },
+                    { id: 160, moduleIndex: 7, question: "مرحلة تحديد عملية عالية المستوى تأتي في المرتبة:", options: ["الثانية ضمن مراحل تطبيق الاستراتيجية الست", "الأخيرة تماماً", "الأولى قبل تحديد الأهداف", "قبل القياس مباشرة"], correct: 0, explanation: "مراحل التطبيق تبدأ بتحديد الأهداف ثم تحديد عملية عالية المستوى واحتياجات التكنولوجيا[span_161](start_span)[span_161](end_span)." },
+
+                    // المحور التاسع (20 سؤالاً)
+                    { id: 161, moduleIndex: 8, question: "ما هي تكنولوجيا المعلومات المكونة للبنية الأساسية؟", options: ["الاتصالات الحديثة، الإنترنت، الحواسيب، مراكز المعلومات، والموارد البشرية المتخصصة", "الكابلات التالفة والشاشات القديمة", "المستندات الورقية والمجلدات الأرشيفية", "الأثاث المكتبي والمكاتب الخشبية"], correct: 0, explanation: "البنية الأساسية لتكنولوجيا المعلومات تشمل الاتصالات، الإنترنت، الحواسيب، المراكز والموارد البشرية[span_162](start_span)[span_162](end_span)." },
+                    { id: 162, moduleIndex: 8, question: "ما هو دور تكنولوجيا إدارة المعرفة؟", options: ["تعمل كوسط حاضن للمعرفة، تدعم المعرفة الصريحة وتساعد في توليدها وتنظيمها وتخزينها ونقلها", "تعمل على حذف وإتلاف البيانات", "تمنع الموظفين من الوصول للمعلومات", "تُستخدم للترفيه والألعاب فقط"], correct: 0, explanation: "التكنولوجيا تعمل كوسط حاضن، تدعم المعرفة الصريحة وتولدها وتنظمها وتخزينها وتنقلها[span_163](start_span)[span_163](end_span)." },
+                    { id: 163, moduleIndex: 8, question: "ما هو مستودع البيانات (Data Warehouse)؟", options: ["نظام يجمع بيانات من مصادر متعددة ويخزنها للتحليل", "سلة مهملات رقمية للملفات التالفة", "برنامج لحساب رواتب الموظفين الشهرية", "أرشيف ورقي يدوي"], correct: 0, explanation: "مستودع البيانات يجمع بيانات من مصادر متعددة ويخزنها للتحليل والدعم[span_164](start_span)[span_164](end_span)." },
+                    { id: 164, moduleIndex: 8, question: "ما هو التنقيب عن البيانات (Data Mining)؟", options: ["تحليل كميات كبيرة لاكتشاف أنماط تساعد في القرار والتنبؤ", "حذف البيانات المكررة عشوائياً", "طباعة المستندات بألوان متعددة", "تشفير كلمات المرور فقط"], correct: 0, explanation: "التنقيب عن البيانات يحلل كميات كبيرة لاكتشاف أنماط تساعد القرار والتنبؤ[span_165](start_span)[span_165](end_span)." },
+                    { id: 165, moduleIndex: 8, question: "دور تكنولوجيا المعرفة في عمليات المعرفة يشمل:", options: ["اكتشاف المعرفة، توليد المعرفة، خزن المعرفة، ودعم المشاركة والنشر والاسترجاع والتطبيق", "منع اكتشاف أو تخزين المعرفة", "اقتصارها على الطباعة اليدوية", "حذف قواعد المعرفة تلقائياً"], correct: 0, explanation: "دورها يشمل اكتشاف، توليد، خزن، ودعم المشاركة والنشر والاسترجاع عبر الشبكات[span_166](start_span)[span_166](end_span)." },
+                    { id: 166, moduleIndex: 8, question: "تحويل أنواع المعرفة (ضمنية إلى ضمنية) يتم عبر:", options: ["التفاعل والتعلم الاجتماعي", "قواعد البيانات الرقمية الصريحة", "الوثائق والمستندات المكتوبة", "قراءة الكتب وحدها دون تفاعل"], correct: 0, explanation: "تحويل ضمنية إلى ضمنية يتم عبر التفاعل والتعلم الاجتماعي[span_167](start_span)[span_167](end_span)." },
+                    { id: 167, moduleIndex: 8, question: "تحويل أنواع المعرفة (ضمنية إلى صريحة) يتم عبر:", options: ["الحوار والتوثيق والتسجيل والنمذجة", "التفاعل الاجتماعي الصامت", "التصفح العشوائي", "النسخ المباشر للملفات"], correct: 0, explanation: "تحويل ضمنية إلى صريحة يتم عبر الحوار والتوثيق والتسجيل والنمذجة[span_168](start_span)[span_168](end_span)." },
+                    { id: 168, moduleIndex: 8, question: "تحويل أنواع المعرفة (صريحة إلى صريحة) يتم عبر:", options: ["دمج الوثائق والمعلومات وقواعد البيانات", "التعلم الاجتماعي التلقائي", "الخبرات المجرّدة في العقول", "الحدس الشخصي"], correct: 0, explanation: "تحويل صريحة إلى صريحة يتم عبر دمج الوثائق والمعلومات وقواعد البيانات[span_169](start_span)[span_169](end_span)." },
+                    { id: 169, moduleIndex: 8, question: "تحويل أنواع المعرفة (صريحة إلى ضمنية) يتم عبر:", options: ["التعلم، التصفح، التدريب الإلكتروني وفهم المعلومات وتطبيقها", "التوثيق الكتابي البحت", "حذف المستندات", "الاجتماعات الشفهية فقط"], correct: 0, explanation: "تحويل صريحة إلى ضمنية يتم عبر التعلم والتصفح والتدريب وتطبيق المعلومات[span_170](start_span)[span_170](end_span)." },
+                    { id: 170, moduleIndex: 8, question: "ما هي شروط نجاح التكنولوجيا في إدارة المعرفة (6 شروط)؟", options: ["توافقها مع حاجات المستخدم، سهولة الوصول، جودة المحتوى، التكامل، قابلية التوسع، وتوافق الأجهزة والبرمجيات", "تعقيد النظام، صعوبة الوصول، رداءة المحتوى، وانعزاله", "ارتفاع التكاليف وعدم التوافق", "بطء التشغيل وإلغاء التوسع"], correct: 0, explanation: "شروط النجاح 6: توافق مع الحاجات، سهولة الوصول، جودة المحتوى، التكامل، التوسع، وتوافق الأجهزة[span_171](start_span)[span_171](end_span)." },
+                    { id: 171, moduleIndex: 8, question: "تكنولوجيا إدارة المعرفة تدعم بشكل خاص:", options: ["المعرفة الصريحة وتساعد في توليدها وتنظيمها وتخزينها", "المعرفة الضمنية غير القابلة للتوثيق نهائياً", "البيانات التالفة وغير المنظمة", "الملفات الورقية اليدوية"], correct: 0, explanation: "تعمل كوسط حاضن وتدعم خاصة المعرفة الصريحة وتساعد في توليدها وتخزينها[span_172](start_span)[span_172](end_span)." },
+                    { id: 172, moduleIndex: 8, question: "استخدام نظم التصميم بمساعدة الحاسوب والواقع الافتراضي يدعم:", options: ["توليد المعرفة", "إتلاف البيانات", "حذف قواعد المعرفة", "تقليل الكفاءة"], correct: 0, explanation: "توليد المعرفة يتم عبر نظم التصميم بمساعدة الحاسوب والواقع الافتراضي وغيرها[span_173](start_span)[span_173](end_span)." },
+                    { id: 173, moduleIndex: 8, question: "مستودعات البيانات، قواعد المعرفة، ومخازن البيانات تُستخدم في:", options: ["خزن المعرفة", "حذف المعرفة", "منع الوصول للمعلومات", "إلغاء التقنية"], correct: 0, explanation: "خزن المعرفة يتم عبر قواعد المعرفة ومخازن البيانات وخرائط المعرفة[span_174](start_span)[span_174](end_span)." },
+                    { id: 174, moduleIndex: 8, question: "التفاعل والتعلم الاجتماعي يُعد أداة لتحويل المعرفة من:", options: ["ضمنية إلى ضمنية", "صريحة إلى صريحة", "صريحة إلى ضمنية", "ضمنية إلى صريحة"], correct: 0, explanation: "تحويل ضمنية إلى ضمنية يتم عبر التفاعل والتعلم الاجتماعي[span_175](start_span)[span_175](end_span)." },
+                    { id: 175, moduleIndex: 8, question: "الحوار والتوثيق والنمذجة تُعد أدوات لتحويل المعرفة من:", options: ["ضمنية إلى صريحة", "صريحة إلى صريحة", "ضمنية إلى ضمنية", "صريحة إلى ضمنية"], correct: 0, explanation: "تحويل ضمنية إلى صريحة يتم عبر الحوار والتوثيق والتسجيل والنمذجة[span_176](start_span)[span_176](end_span)." },
+                    { id: 176, moduleIndex: 8, question: "جودة المحتوى وسهولة الوصول وتوافق الأجهزة تُعد من:", options: ["شروط نجاح التكنولوجيا في إدارة المعرفة", "أسباب فشل التقنية الحتمي", "العوائق القانونية للاستخدام", "المشكلات المالية للشركة"], correct: 0, explanation: "شروط نجاح التكنولوجيا تشمل توافقها مع الحاجات، سهولة الوصول، جودة المحتوى والتكامل[span_177](start_span)[span_177](end_span)." },
+                    { id: 177, moduleIndex: 8, question: "البنية الأساسية لتكنولوجيا المعلومات تتضمن كم عنصراً رئيسياً؟", options: ["5 عناصر (الاتصالات، الإنترنت، الحواسيب، مراكز المعلومات، الموارد البشرية)", "عنصران فقط", "ثلاثة عناصر", "عشرة عناصر"], correct: 0, explanation: "البنية الأساسية تشمل 5 عناصر: الاتصالات الحديثة، الإنترنت، الحواسيب، المراكز، والموارد البشرية[span_178](start_span)[span_178](end_span)." },
+                    { id: 178, moduleIndex: 8, question: "اكتشاف المعرفة تكنولوجياً يعتمد على:", options: ["مستودعات البيانات والتنقيب عن البيانات وقواعد البيانات", "الدفاتر الورقية اليدوية", "الذاكرة البشرية وحدها دون حواسيب", "الرسائل الشفهية العابرة"], correct: 0, explanation: "اكتشاف المعرفة يعتمد على مستودعات البيانات والتنقيب وقواعد البيانات[span_179](start_span)[span_179](end_span)." },
+                    { id: 179, moduleIndex: 8, question: "التعلم والتصفح والتدريب الإلكتروني يُستخدم لتحويل المعرفة من:", options: ["صريحة إلى ضمنية", "ضمنية إلى صريحة", "صريحة إلى صريحة", "ضمنية إلى ضمنية"], correct: 0, explanation: "تحويل صريحة إلى ضمنية يتم عبر التعلم والتصفح والتدريب الإلكتروني وتطبيق المعلومات[span_180](start_span)[span_180](end_span)." },
+                    { id: 180, moduleIndex: 8, question: "قابلية التوسع والتكامل وتوافق البرمجيات والأجهزة تعتبر من:", options: ["شروط نجاح التكنولوجيا", "أخطاء التثبيت البرمجي", "المشكلات الأمنية البحتة", "متطلبات المحاسبة المالية"], correct: 0, explanation: "من شروط نجاح التكنولوجيا التكامل، قابلية التوسع، وتوافق الأجهزة والبرمجيات[span_181](start_span)[span_181](end_span)." },
+
+                    // المحور العاشر (20 سؤالاً)
+                    { id: 181, moduleIndex: 9, question: "ما هو تعريف رأس المال الفكري؟", options: ["مجموعة الخبرات والمهارات والمعارف والقدرات التي تساعد المنظمة على النجاح وتحقيق الميزة التنافسية", "الأموال النقدية المودعة في البنوك فقط", "المباني والمكاتب والأثاث المكتبي", "عدد الأجهزة والمعدات الثقيلة"], correct: 0, explanation: "رأس المال الفكري مجموعة الخبرات والمهارات والمعارف التي تحقق الميزة التنافسية[span_182](start_span)[span_182](end_span)." },
+                    { id: 182, moduleIndex: 9, question: "من خصائص رأس المال الفكري (5 خصائص):", options: ["مهارات وخبرات عالية، الاستقلالية، تفضيل هياكل مرنة ولامركزية، الميل للمبادرة والابتكار، والانفتاح على الآخرين", "الجمود، المركزية الشديدة، ورفض التجديد", "الاندثار السريع كالمال المادي", "الاعتماد على العمل اليدوي الروتيني"], correct: 0, explanation: "خصائصه 5: مهارات عالية، استقلالية، هياكل مرنة ولامركزية، مبادرة واهتمام، وانفتاح[span_183](start_span)[span_183](end_span)." },
+                    { id: 183, moduleIndex: 9, question: "قيمة رأس المال الفكري تتميز بأنها:", options: ["تتزايد بالابتكار والتجديد بخلاف رأس المال المادي الذي يندثر", "تقل بالاستخدام المستمر", "تتلاشى فوراً بعد مغادرة الموظفين", "ثابتة لا تتغير أبداً"], correct: 0, explanation: "رأس المال الفكري معرفة غير ملموسة قيمته تتزايد بالابتكار والتجديد بخلاف المادي[span_184](start_span)[span_184](end_span)." },
+                    { id: 184, moduleIndex: 9, question: "ما هي أهمية رأس المال الفكري (3 نقاط أساسية)؟", options: ["مورد استراتيجي، مصدر للثروة والميزة التنافسية، أساس للمنظمات الذكية", "سبب للخسائر المالية الدائمة", "أداة لتعقيد العمليات وإبطائها", "أصل مادي قابل للبيع الفوري"], correct: 0, explanation: "أهميته 3: مورد استراتيجي، مصدر للثروة والميزة التنافسية، وأساس للمنظمات الذكية[span_185](start_span)[span_185](end_span)." },
+                    { id: 185, moduleIndex: 9, question: "ما هي متطلبات بناء رأس المال الفكري (5 متطلبات)؟", options: ["بيئة وبنية تقنية، تعاون بين الجامعة والأعمال، اقتناع أن العصر عصر معرفة، تشخيص الأصول، وبناء معرفة ذاتية", "الاعتماد الكلي على المعرفة المستوردة", "إلغاء البحث العلمي والجامعات", "تقليل استخدام التكنولوجيا"], correct: 0, explanation: "متطلبات البناء 5 تشمل بيئة تقنية، تعاون الأكاديميا والأعمال، تشخيص الأصول وبناء معرفة ذاتية[span_186](start_span)[span_186](end_span)." },
+                    { id: 186, moduleIndex: 9, question: "ما هي مكونات رأس المال الفكري الثلاثة الأساسية؟", options: ["رأس المال البشري، رأس المال الهيكلي/التنظيمي، رأس مال العملاء/الزبائن", "رأس المال النقدي، رأس المال العقاري، رأس المال الصناعي", "رأس مال الموردين، رأس مال المنافسين، رأس مال الحكومة", "رأس المال الثابت، رأس المال المتداول، رأس المال المبدئي"], correct: 0, explanation: "المكونات 3: رأس المال البشري، رأس المال الهيكلي والتنظيمي، ورأس مال العملاء[span_187](start_span)[span_187](end_span)." },
+                    { id: 187, moduleIndex: 9, question: "رأس المال البشري يتمثل في:", options: ["معارف ومهارات وخبرات وإبداع العاملين في المنظمة", "الأنظمة والعمليات وقواعد البيانات المكتوبة", "العلاقات مع العملاء والحصة السوقية فقط", "المباني والمستودعات والآلات"], correct: 0, explanation: "رأس المال البشري يشمل معارف ومهارات وخبرات وإبداع العاملين[span_188](start_span)[span_188](end_span)." },
+                    { id: 188, moduleIndex: 9, question: "رأس المال الهيكلي / التنظيمي يتميز بأنه:", options: ["يبقى في المنظمة بعد مغادرة الأفراد (كالأنظمة والعمليات وقواعد البيانات والابتكار)", "يغادر المنظمة فور استقالة الموظف", "يقتصر على علاقات العملاء الخارجية", "مكون مادي بحت يندثر بسرعة"], correct: 0, explanation: "الرأس المال الهيكلي يشمل الأنظمة والعمليات وقواعد البيانات ويبقى بعد مغادرة الأفراد[span_189](start_span)[span_189](end_span)." },
+                    { id: 189, moduleIndex: 9, question: "رأس مال العملاء / الزبائن يشمل:", options: ["العلاقات والرضا والولاء والاحتفاظ بالعملاء والحصة السوقية", "مهارات العاملين الفردية داخل المكاتب", "هيكل التنظيم الداخلي للشركة", "البرمجيات التقنية وقواعد البيانات"], correct: 0, explanation: "رأس مال العملاء يشمل العلاقات، الرضا، الولاء، الاحتفاظ بالعملاء والحصة السوقية[span_190](start_span)[span_190](end_span)." },
+                    { id: 190, moduleIndex: 9, question: "ما هي خطوات إدارة رأس المال الفكري (4 خطوات)؟", options: ["التعرف على دور المعرفة بالإنتاج، وضع استراتيجية للاستثمار، زيادة كثافة المعرفة وإعادة الهيكلة، تحسين كفاءة العمل المعرفي", "بيع الأصول وتصفية الشركة", "إلغاء الأقسام المعرفية", "الاعتماد على الطرق اليدوية"], correct: 0, explanation: "الخطوات 4: دور المعرفة بالمدخلات والمخرجات، وضع استراتيجية، زيادة الكثافة، وتحسين كفاءة العمل[span_191](start_span)[span_191](end_span)." },
+                    { id: 191, moduleIndex: 9, question: "ما هي طبيعة العلاقة بين رأس المال الفكري وإدارة المعرفة؟", options: ["رأس المال الفكري مورد لصنع وتطبيق المعرفة، وإدارة المعرفة هي الآلية التي تنظم استثمار هذا المورد", "إدارة المعرفة تُهمل رأس المال الفكري تماماً", "لا توجد أي صلة بينهما", "رأس المال الفكري يلغي حاجة المنظمة لإدارة المعرفة"], correct: 0, explanation: "رأس المال الفكري مورد لصنع المعرفة، وإدارة المعرفة الآلية التي تنظم استثماره[span_192](start_span)[span_192](end_span)." },
+                    { id: 192, moduleIndex: 9, question: "كيف يتم قياس رأس المال البشري؟", options: ["قدرات العاملين، الإبداع، الاتجاهات والرضا ودوران العمل", "الحصة السوقية والشكاوى والعملاء الجدد", "الثقافة والتعلم التنظيمي ونظم المعلومات", "حجم الديون البنكية"], correct: 0, explanation: "قياس رأس المال البشري يتم عبر قدرات العاملين، الإبداع، الاتجاهات، والرضا ودوران العمل[span_193](start_span)[span_193](end_span)." },
+                    { id: 193, moduleIndex: 9, question: "كيف يتم قياس رأس المال الهيكلي؟", options: ["الثقافة، الهيكل التنظيمي، التعلم التنظيمي، العمليات ونظم المعلومات", "الحصة السوقية وولاء العملاء", "معدل دوران العمل", "الشكاوى ورضا الزبائن"], correct: 0, explanation: "قياس الهيكلي يشمل الثقافة، الهيكل التنظيمي، التعلم التنظيمي، العمليات ونظم المعلومات[span_194](start_span)[span_194](end_span)." },
+                    { id: 194, moduleIndex: 9, question: "كيف يتم قياس رأس مال العملاء (الزبوني)؟", options: ["الحصة السوقية، رضا العملاء، الشكاوى، ولاء العملاء، اكتساب الجدد وفقد الحاليين", "قدرات العاملين وإبداعهم", "التعلم التنظيمي والهيكل", "الإنفاق على البحث والتطوير"], correct: 0, explanation: "قياس الزبوني يشمل الحصة السوقية، رضا العملاء، الشكاوى، الولاء، واكتساب الجدد وفقد الحاليين[span_195](start_span)[span_195](end_span)." },
+                    { id: 195, moduleIndex: 9, question: "بناء معرفة ذاتية وعدم الاعتماد فقط على المعرفة المستوردة يعتبر من:", options: ["متطلبات بناء رأس المال الفكري", "مسببات فشل المنظمات الحديثة", "المشكلات المالية الطارئة", "مخالفات العمل الإداري"], correct: 0, explanation: "متطلبات البناء تشمل بناء معرفة ذاتية وعدم الاعتماد فقط على المعرفة المستوردة[span_196](start_span)[span_196](end_span)." },
+                    { id: 196, moduleIndex: 9, question: "التعاون بين الجامعة والأعمال ومراكز البحث يهدف إلى:", options: ["بناء ومتطلبات رأس المال الفكري", "زيادة تكاليف التشغيل بلا فائدة", "إغلاق الجامعات والمعاهد", "إيقاف الابتكار الصناعي"], correct: 0, explanation: "من متطلبات بناء رأس المال الفكري التعاون بين الجامعة والأعمال ومراكز البحث[span_197](start_span)[span_197](end_span)." },
+                    { id: 197, moduleIndex: 9, question: "الميل للمبادرة والابتקר والانفتاح على خبرات الآخرين يعتبر من:", options: ["خصائص رأس المال الفكري", "عيوب الإدارة التقليدية", "المشكلات التقنية للشبكات", "المخالفات القانونية"], correct: 0, explanation: "من خصائص رأس المال الفكري: مهارات وخبرات عالية، استقلالية، مبادرة وابتكار وانفتاح[span_198](start_span)[span_198](end_span)." },
+                    { id: 198, moduleIndex: 9, question: "زيادة كثافة المعرفة وتفعيل الأصول الفكرية وإعادة هيكلتها تمثل إحدى:", options: ["خطوات إدارة رأس المال الفكري", "مشكلات الميزانية السنوية", "صعوبات الصيانة اليدوية", "طرق التخلص من الأرشفة"], correct: 0, explanation: "تشمل الخطوات زيادة كثافة المعرفة وتفعيل الأصول الفكرية وإعادة هيكلتها[span_199](start_span)[span_199](end_span)." },
+                    { id: 199, moduleIndex: 9, question: "رأس المال الفكري يمثل معرفة:", options: ["غير ملموسة", "مادية صلبة تندثار بالاستعمال", "سائلة قابلة للتبخر", "ورقية يتم تمزيقها دورياً"], correct: 0, explanation: "رأس المال الفكري يمثل معرفة غير ملموسة وقيمته تتزايد بالابتكار والتجديد[span_200](start_span)[span_200](end_span)." },
+                    { id: 200, moduleIndex: 9, question: "تحسين كفاءة العمل المعرفي وإنتاجية العاملين المعرفيين يعتبر خطوة أساسية في:", options: ["إدارة رأس المال الفكري", "حساب الرسوم الجمركية", "الصيانة اليومية للحواسيب", "توزيع البريد الورقي"], correct: 0, explanation: "الخطوات تشمل تحسين كفاءة العمل المعرفي وإنتاجية العاملين المعرفيين[span_201](start_span)[span_201](end_span)." }
                 ]
             },
             "database_systems": {
@@ -322,8 +527,8 @@
                 icon: "fa-database",
                 modules: ["مقدمة في نظم قواعد البيانات", "نموذج الكيان والارتباط ERD", "لغة الاستعلام المهيكلة SQL", "التطبيع وقواعد البيانات العلائقية"],
                 questions: [
-                    { id: 101, moduleIndex: 2, question: "ما هو الأمر المستخدم لاسترجاع البيانات في SQL؟", options: ["UPDATE", "SELECT", "INSERT", "DELETE"], correct: 1, explanation: "أمر SELECT يُستخدم لاسترجاع البيانات من الجداول." },
-                    { id: 102, moduleIndex: 1, question: "يمثل المفتاح الأساسي (Primary Key):", options: ["قيمة مكررة في الجدول", "معرف فريد لا يتكرر ولا يقبل القيم الفارغة", "مفتاح يربط جدولاً بجدول آخر", "نوع بيانات نصي"], correct: 1, explanation: "المفتاح الأساسي فريد ولا يسمح بتكرار القيم أو تركها فارغة." }
+                    { id: 101, moduleIndex: 2, question: "ما هو الأمر المستخدم لاسترجاع البيانات في SQL؟", options: ["UPDATE", "SELECT", "INSERT", "DELETE"], correct: 1, explanation: "أمر SELECT يُستخدم لاسترجاع واستعلام البيانات من الجداول." },
+                    { id: 102, moduleIndex: 1, question: "يمثل المفتاح الأساسي (Primary Key):", options: ["قيمة مكررة في الجدول", "معرف فريد لا يتكرر ولا يقبل القيم الفارغة", "مفتاح يربط جدولاً بجدول آخر", "نوع بيانات نصي طويل"], correct: 1, explanation: "المفتاح الأساسي فريد ولا يسمح بتكرار القيم أو تركها فارغة." }
                 ]
             },
             "systems_analysis": {
@@ -332,25 +537,23 @@
                 icon: "fa-sitemap",
                 modules: ["دورة حياة تطوير النظام SDLC", "جمع المعلومات", "مخططات تدفق البيانات DFD", "التصميم الشيئي OOP"],
                 questions: [
-                    { id: 201, moduleIndex: 0, question: "ما هي أول مرحلة في دورة حياة النظام (SDLC)؟", options: ["التصميم", "التنفيذ", "تحديد المشكلة والتخطيط", "الصيانة"], correct: 2, explanation: "أول مرحلة هي التخطيط وتحديد المتطلبات والمشكلة." }
+                    { id: 201, moduleIndex: 0, question: "ما هي أول مرحلة في دورة حياة النظام (SDLC)؟", options: ["التصميم البرمجي", "التنفيذ الفعلي", "تحديد المشكلة والتخطيط", "الصيانة المستمرة"], correct: 2, explanation: "أول مرحلة هي التخطيط وتحديد المتطلبات ودراسة الجدوى." }
                 ]
             }
         };
 
-        // حالة التطبيق الحالية
         let currentUser = JSON.parse(localStorage.getItem('km_user')) || null;
         let currentCourseKey = null;
         let activeQuizQuestions = [];
         let currentQuestionIndex = 0;
         let userAnswers = {};
-        let timerInterval = null;
+        let quizTimer = null;
         let timeLeft = 1800; // 30 دقيقة
         let testStartTime = 0;
 
-        // تهيئة التطبيق عند الفتح
         window.onload = function() {
             initDarkMode();
-            if (currentUser) {
+            if (currentUser && currentUser.name) {
                 showDashboard();
             } else {
                 document.getElementById('authScreen').classList.remove('hidden');
@@ -358,12 +561,14 @@
             loadLeaderboard();
         };
 
-        // تسجيل الدخول
         function handleAuth(e) {
             e.preventDefault();
             const name = document.getElementById('inputName').value.trim();
-            const major = document.getElementById('inputMajor').value.trim();
-            if(!name) return;
+            const major = document.getElementById('inputMajor').value;
+            if(!name || !major) {
+                alert("الرجاء إدخال الاسم واختيار التخصص من القائمة.");
+                return;
+            }
 
             currentUser = { name, major };
             localStorage.setItem('km_user', JSON.stringify(currentUser));
@@ -379,7 +584,6 @@
             updateUserStats();
         }
 
-        // عرض بطاقات المواد الدراسية
         function renderCoursesGrid() {
             const grid = document.getElementById('coursesGrid');
             grid.innerHTML = '';
@@ -393,7 +597,7 @@
                             </div>
                             <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold px-2.5 py-1 rounded-full">${course.code}</span>
                             <h4 class="text-xl font-bold mt-3">${course.title}</h4>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">${course.modules.length} محاور رئيسية • ${course.questions.length} سؤالاً معتمداً</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">${course.modules.length} محاور • ${course.questions.length} سؤالاً معتمداً</p>
                         </div>
                         <div class="mt-6 flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-bold text-sm">
                             <span>ابدأ المراجعة والاختبار</span>
@@ -404,7 +608,6 @@
             }
         }
 
-        // فتح مادة دراسية
         function openCourse(key) {
             currentCourseKey = key;
             const course = COURSES_DATA[key];
@@ -419,22 +622,22 @@
                 modContainer.innerHTML += `
                     <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 flex items-center justify-between text-sm font-semibold">
                         <span>${mod}</span>
-                        <button onclick="startModuleQuiz(${idx})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-xl transition">اختبار المحور</button>
+                        <button onclick="startModuleQuiz(${idx})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-xl transition">اختبار المحور (20 سؤالاً)</button>
                     </div>
                 `;
             });
         }
 
         function backToDashboard() {
+            clearInterval(quizTimer);
             document.getElementById('courseScreen').classList.add('hidden');
             document.getElementById('quizScreen').classList.add('hidden');
             document.getElementById('resultScreen').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             updateUserStats();
+            loadLeaderboard();
         }
 
-        // بدء الاختبار
-        let quizTimer = null;
         function startQuiz(mode, moduleIndex = null) {
             const course = COURSES_DATA[currentCourseKey];
             if(mode === 'all') {
@@ -450,18 +653,16 @@
                 return;
             }
 
-            // خلط الأسئلة عشوائياً
             activeQuizQuestions.sort(() => Math.random() - 0.5);
-
             currentQuestionIndex = 0;
             userAnswers = {};
             testStartTime = Date.now();
-            timeLeft = 1800; // 30 دقيقة
+            timeLeft = 1800;
 
             document.getElementById('courseScreen').classList.add('hidden');
             document.getElementById('quizScreen').classList.remove('hidden');
-
             document.getElementById('quizTitle').textContent = course.title;
+
             startTimer();
             renderQuestion();
         }
@@ -484,7 +685,6 @@
             }, 1000);
         }
 
-        // عرض السؤال الحالي
         function renderQuestion() {
             const q = activeQuizQuestions[currentQuestionIndex];
             const total = activeQuizQuestions.length;
@@ -538,7 +738,6 @@
             }
         }
 
-        // تسليم الاختبار وتصحيحه
         function submitQuiz() {
             clearInterval(quizTimer);
             let score = 0;
@@ -554,7 +753,6 @@
             const timeElapsedSecs = Math.floor((Date.now() - testStartTime) / 1000);
             const timeStr = `${Math.floor(timeElapsedSecs/60).toString().padStart(2,'0')}:${(timeElapsedSecs%60).toString().padStart(2,'0')}`;
 
-            // حفظ النتيجة في لوحة المتصدرين المحلية وسجل الطالب
             saveResultRecord({
                 name: currentUser.name,
                 major: currentUser.major,
@@ -573,7 +771,6 @@
             document.getElementById('resPercentage').textContent = `${percentage}%`;
             document.getElementById('resTimeUsed').textContent = timeStr;
 
-            // بناء تفاصيل المراجعة
             const reviewContainer = document.getElementById('detailedReviewContainer');
             reviewContainer.innerHTML = '';
             activeQuizQuestions.forEach((q, idx) => {
@@ -600,7 +797,6 @@
             startQuiz('all');
         }
 
-        // تخزين النتائج ولوحة المتصدرين
         function saveResultRecord(record) {
             let history = JSON.parse(localStorage.getItem('km_results_history')) || [];
             history.push(record);
@@ -610,7 +806,6 @@
 
         function loadLeaderboard() {
             let history = JSON.parse(localStorage.getItem('km_results_history')) || [];
-            // تصفية المحاولات لأخذ أعلى نتيجة لكل طالب ومنع التكرار مع مراعاة أسرع زمن
             let uniqueStudents = {};
             history.forEach(item => {
                 if(!uniqueStudents[item.name] || item.percentage > uniqueStudents[item.name].percentage || (item.percentage === uniqueStudents[item.name].percentage && item.timeSecs < uniqueStudents[item.name].timeSecs)) {
@@ -623,7 +818,7 @@
 
             const tbody = document.getElementById('leaderboardTableBody');
             if(top5.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">لا توجد نتائج مسجلة حتى الآن. كن أول المشاركين!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">لا توجد نتائج مسجلة حتى الآن. كن أول المشاركين!</td></tr>`;
                 return;
             }
 
@@ -638,6 +833,7 @@
                     <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition">
                         <td class="py-3"><span class="w-7 h-7 rounded-xl ${badgeClass} inline-flex items-center justify-center text-xs">${index + 1}</span></td>
                         <td class="py-3 font-semibold">${item.name}</td>
+                        <td class="py-3 text-slate-500 text-xs">${item.major}</td>
                         <td class="py-3 text-slate-500 text-xs">${item.course}</td>
                         <td class="py-3 font-bold text-indigo-600">${item.percentage}% (${item.score})</td>
                         <td class="py-3 text-slate-400 text-xs">${item.time}</td>
@@ -656,7 +852,6 @@
             }
         }
 
-        // تفعيل الوضع الليلي
         function initDarkMode() {
             if (localStorage.getItem('darkMode') === 'true') {
                 document.documentElement.classList.add('dark');
@@ -670,7 +865,6 @@
             document.getElementById('darkModeIcon').className = isDark ? "fa-solid fa-sun text-yellow-400" : "fa-solid fa-moon text-slate-600";
         }
 
-        // PWA Install Prompt Handler
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
