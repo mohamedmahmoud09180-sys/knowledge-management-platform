@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة نظم المعلومات الجامعية - التعليمية والتفاعلية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- نافذة تثبيت التطبيق PWA (تظهر تدريجياً) -->
+    <div id="installBanner" class="hidden bg-indigo-600 text-white px-4 py-3 text-center text-sm font-medium flex items-center justify-center gap-3 shadow-md z-50">
+        <span>📱 هل تريد تثبيت المنصة كتطبيق على هاتفك أو جهازك للعمل بدون إنترنت؟</span>
+        <button id="installBtn" class="bg-white text-indigo-700 px-3 py-1 rounded-full font-bold hover:bg-indigo-50 transition">تثبيت الآن</button>
+        <button onclick="document.getElementById('installBanner').style.display='none'" class="text-indigo-200 hover:text-white px-2">✕</button>
+    </div>
+
+    <!-- رأس الصفحة التنقلوي -->
+    <header class="bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">منصة نظم المعلومات</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">المنصة التعليمية التفاعلية المتكاملة</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- زر تبديل الوضع الليلي والنهاري -->
+                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 transition" title="تبديل الوضع الليلي">
+                    <i id="darkModeIcon" class="fa-solid fa-moon text-slate-600 dark:text-yellow-400"></i>
+                </button>
+                <!-- معلومات الطالب النشط -->
+                <div id="userBadge" class="hidden sm:flex items-center gap-2 bg-indigo-50 dark:bg-slate-700/50 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-slate-600">
+                    <i class="fa-solid fa-user-graduate text-indigo-600 dark:text-indigo-400"></i>
+                    <span id="navUserName" class="text-sm font-semibold"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+
+        <!-- 1. شاشة تسجيل الطالب (تظهر للمرة الأولى) -->
+        <section id="authScreen" class="max-w-md mx-auto bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 my-12">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h2 class="text-2xl font-bold">تسجيل الطالب</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">أدخل بياناتك للبدء في مراجعة المواد واختبارات الأداء</p>
+            </div>
+            <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">الاسم الكامل</label>
+                    <input type="text" id="inputName" required placeholder="مثال: محمد محمود سيد أحمد" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">التخصص / القسم</label>
+                    <input type="text" id="inputMajor" required value="قسم نظم المعلومات - الدفعة 14" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+                    <span>دخول المنصة</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. لوحة التحكم الرئيسية (تظهر بعد التسجيل) -->
+        <div id="mainDashboard" class="hidden space-y-8">
+            
+            <!-- الترحيب والإحصاءات السريعة -->
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-700 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <span class="bg-white/20 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">جامعة كرري - كلية علوم الحاسوب</span>
+                    <h2 class="text-2xl sm:text-3xl font-black mt-2">أهلاً بك، <span id="welcomeName"></span> 👋</h2>
+                    <p class="text-indigo-100 text-sm mt-1">اختر المادة الدراسية أدناه للبدء في المراجعة والاختبارات التفاعلية.</p>
+                </div>
+                <div class="flex gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center">
+                    <div>
+                        <div id="statCompletedTests" class="text-2xl font-bold">0</div>
+                        <div class="text-xs text-indigo-200">اختبار مجتاز</div>
+                    </div>
+                    <div class="w-px bg-white/20"></div>
+                    <div>
+                        <div id="statAvgScore" class="text-2xl font-bold">0%</div>
+                        <div class="text-xs text-indigo-200">متوسط الدرجات</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة المواد الدراسية -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-indigo-600"></i>
+                        <span>مقررات قسم نظم المعلومات</span>
+                    </h3>
+                </div>
+                <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- يتم تعبئتها برمجياً -->
+                </div>
+            </div>
+
+            <!-- لوحة المتصدرين وتحدي الطلاب -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-500"></i>
+                        <span>🏆 تحدي الطلاب (لوحة المتصدرين)</span>
+                    </h3>
+                    <span class="text-xs bg-amber-500/10 text-amber-600 font-semibold px-3 py-1 rounded-full">أفضل النتائج</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 dark:border-slate-700 text-xs text-slate-400">
+                                <th class="pb-3 font-semibold">المركز</th>
+                                <th class="pb-3 font-semibold">اسم الطالب</th>
+                                <th class="pb-3 font-semibold">المادة</th>
+                                <th class="pb-3 font-semibold">النتيجة</th>
+                                <th class="pb-3 font-semibold">الزمن المستغرق</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody" class="divide-y divide-slate-100 dark:divide-slate-700/50 text-sm">
+                            <!-- يتم تعبئتها برمجياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. شاشة استعراض محاور المادة والاختبارات -->
+        <div id="courseScreen" class="hidden space-y-6">
+            <button onclick="backToDashboard()" class="inline-flex items-center gap-2 text-sm font-semibold bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>العودة للرئيسية</span>
+            </button>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span id="activeCourseCode" class="text-xs bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold px-3 py-1 rounded-full"></span>
+                    <h2 id="activeCourseTitle" class="text-2xl font-black mt-2"></h2>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button onclick="startQuiz('all')" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-pen"></i>
+                        <span>بدء الاختبار الشامل (30 دقيقة)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- محاور المادة وبنك الأسئلة -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-600"></i>
+                        <span>وحدات ومحاور المادة</span>
+                    </h3>
+                    <div id="modulesList" class="space-y-2">
+                        <!-- تعبئة الوحدات -->
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-center items-center text-center p-12">
+                    <div class="w-20 h-20 bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 rounded-3xl flex items-center justify-center text-3xl mb-4">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">جاهز لاختبار معلوماتك؟</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mt-2 mb-6">اختر الاختبار الشامل للمادة أو اختبر نفسك في أي محور محدد لتقییم مستواك والحصول على تقرير تفصيلي مع الإجابات الصحيحة.</p>
+                    <button onclick="startQuiz('all')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition">ابدأ الاختبار الآن</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. شاشة الاختبار التفاعلي -->
+        <div id="quizScreen" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div>
+                    <span id="quizModuleBadge" class="text-xs bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold px-3 py-1 rounded-full"></span>
+                    <h3 id="quizTitle" class="text-xl font-black mt-2">اختبار المادة</h3>
+                </div>
+                <!-- المؤقت التنازلي -->
+                <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-4 py-2 rounded-2xl border border-amber-200 dark:border-amber-700/50 font-bold">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <span id="timerDisplay">30:00</span>
+                </div>
+            </div>
+
+            <!-- بطاقة السؤال -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
+                <div class="flex justify-between items-center text-sm text-slate-400">
+                    <span id="questionCounter">السؤال 1 من 10</span>
+                    <span id="questionProgressText">10%</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="quizProgressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <h4 id="questionText" class="text-xl font-bold leading-relaxed pt-2">نص السؤال هنا...</h4>
+
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- خيارات الإجابة -->
+                </div>
+            </div>
+
+            <!-- أزرار التنقل في الاختبار -->
+            <div class="flex justify-between items-center">
+                <button onclick="prevQuestion()" id="prevBtn" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold px-6 py-3 rounded-xl hover:bg-slate-50 transition disabled:opacity-50">السابق</button>
+                <button onclick="nextQuestion()" id="nextBtn" class="bg-indigo-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition">السؤال التالي</button>
+            </div>
+        </div>
+
+        <!-- 5. شاشة النتائج والمراجعة -->
+        <div id="resultScreen" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 text-center space-y-4">
+                <div id="resultIcon" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black">نتيجة الاختبار</h3>
+                <p id="resultSubText" class="text-slate-500 dark:text-slate-400">تم تصحيح إجاباتك بنجاح وحفظ النتيجة في سجلك.</p>
+                
+                <div class="grid grid-cols-3 gap-4 max-w-md mx-auto py-4">
+                    <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl">
+                        <div id="resFinalScore" class="text-2xl font-black text-indigo-600 dark:text-indigo-400">0/0</div>
+                        <div class="text-xs text-slate-400 mt-1">الدرجة النهائية</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl">
+                        <div id="resPercentage" class="text-2xl font-black text-emerald-600">0%</div>
+                        <div class="text-xs text-slate-400 mt-1">النسبة المئوية</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl">
+                        <div id="resTimeUsed" class="text-2xl font-black text-amber-600">00:00</div>
+                        <div class="text-xs text-slate-400 mt-1">الزمن المنقضي</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 pt-4">
+                    <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition">إعادة الاختبار</button>
+                    <button onclick="backToDashboard()" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold px-6 py-3 rounded-xl transition">العودة للرئيسية</button>
+                </div>
+            </div>
+
+            <!-- مراجعة الإجابات المفصلة -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+                <h4 class="font-bold text-lg">مراجعة الإجابات الصحيحة والخاطئة</h4>
+                <div id="detailedReviewContainer" class="space-y-4">
+                    <!-- تفاصيل المراجعة -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+            منصة نظم المعلومات التفاعلية لطلاب الجامعة © 2026 - جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <!-- منطق البرمجة وتخزين البيانات -->
+    <script>
+        // قاعدة البيانات الشاملة للمقررات والأسئلة الحقيقية المستخرجة
+        const COURSES_DATA = {
+            "knowledge_management": {
+                title: "إدارة المعرفة (Knowledge Management)",
+                code: "KM-401",
+                icon: "fa-brain",
+                modules: [
+                    "المحور الأول: الإطار المفاهيمي لإدارة المعرفة",
+                    "المحور الثاني: عمليات إدارة المعرفة الأساسية",
+                    "المحور الثالث: مبادئ وتحديات وعوامل نجاح إدارة المعرفة",
+                    "المحور الرابع: استراتيجيات إدارة المعرفة ونماذجها",
+                    "المحور الخامس: نظم إدارة المعرفة وأنواعها",
+                    "المحور السادس: مراحل تطبيق إدارة المعرفة وقياسها",
+                    "المحور السابع: آثار تطبيق إدارة المعرفة",
+                    "المحور الثامن: استراتيجيات المعرفة المتقدمة",
+                    "المحور التاسع: دور التكنولوجيا في تحويل المعرفة",
+                    "المحور العاشر: رأس المال الفكري وإدارته"
+                ],
+                questions: [
+                    { id: 1, moduleIndex: 0, question: "ما هو أعلى مستوى في هرم المعرفة؟", options: ["البيانات", "المعلومات", "المعرفة", "الحكمة"], correct: 3, explanation: "الحكمة هي أعلى مستوى في الهرم وتنتج عن تراكم المعارف والخبرات." },
+                    { id: 2, moduleIndex: 0, question: "المعرفة التي تتواجد في عقول الأفراد وصعبة الترميز وتنتقل بالممارسة هي:", options: ["المعرفة الصريحة", "المعرفة الضمنية", "المعلومات الخام", "البيانات"], correct: 1, explanation: "المعرفة الضمنية هي خبرات ومهارات وحدس موجود في عقول الأفراد." },
+                    { id: 3, moduleIndex: 1, question: "أي من عمليات إدارة المعرفة التالية تركز على تحديد الفجوة بين المعرفة الموجودة والمطلوبة؟", options: ["توليد المعرفة", "تشخيص المعرفة", "خزن المعرفة", "تطبيق المعرفة"], correct: 1, explanation: "تشخيص المعرفة يحدد أنواعها ومصادرها ومقارنتها بالمعرفة المطلوبة." },
+                    { id: 4, moduleIndex: 1, question: "يتكون نموذج SECI لتحويل المعرفة من كم مرحلة؟", options: ["مرحلتان", "ثلاث مراحل", "أربع مراحل", "خمس مراحل"], correct: 2, explanation: "يتكون نموذج SECI من 4 مراحل: التنشئة، الأخرجة، التجميع، والأدخلة." },
+                    { id: 5, moduleIndex: 2, question: "من أهم مبادئ إدارة المعرفة:", options: ["التكنولوجيا وحدها تكفي", "مشاركة المعرفة أصعب من إنتاجها", "إدارة المعرفة بلا نهاية ولا تحتاج تكلفة", "الإتاحة وحدها تضمن الاستخدام"], correct: 1, explanation: "مشاركة المعرفة أصعب من إنتاجها وخاصة المعرفة الضمنية." },
+                    { id: 6, moduleIndex: 3, question: "استراتيجيات ويغ (Wiig) في إدارة المعرفة تتضمن:", options: ["النمو التدريجي والتبني المتروي ودعم وجهات النظر الفاعلة", "الترميزية مقابل الشخصية فقط", "جانب العرض مقابل الطلب فقط", "الاستحواذ الفوري"], correct: 0, explanation: "استراتيجيات ويغ تشمل النمو التدريجي، التبني المتروي، ودعم وجهات النظر المتقدمة." },
+                    { id: 7, moduleIndex: 4, question: "تتكون النظم الخبيرة أساساً من المكونات التالية:", options: ["قاعدة معرفة، آلة استدلال، واجهة مستخدم", "مستودع بيانات فقط", "تنقيب عن البيانات وشبكة", "أجهزة حاسوب متقدمة"], correct: 0, explanation: "النظم الخبيرة تتكون أساساً من قاعدة معرفة، آلة استدلال، واجهة للمستخدم." },
+                    { id: 8, moduleIndex: 5, question: "تشمل المرحلة الثالثة من مراحل تطبيق إدارة المعرفة:", options: ["البنية التحتية والعلاقات", "التكامل الداخلي (هيكلة المعرفة ورسم خرائطها)", "التعاون والشبكات الخارجية", "تبرير الأفكار"], correct: 1, explanation: "المرحلة الثالثة هي التكامل الداخلي وتشمل هيكلة المعرفة ورسم خرائطها ومحركات البحث." },
+                    { id: 9, moduleIndex: 6, question: "تؤثر إدارة المعرفة على العاملين من خلال:", options: ["تقليل الرضا الوظيفي", "توسيع الخبرات ودعم التعلم المستمر وزيادة المرونة", "تقييد القدرة على التكيف", "خفض الإنتاجية"], correct: 1, explanation: "إدارة المعرفة توسع الخبرات وتدعم التعلم المستمر وتزيد المرونة والرضا الوظيفي." },
+                    { id: 10, moduleIndex: 9, question: "يمثل رأس المال الفكري:", options: ["رأس مال مادي يندثر سريعاً", "معرفة غير ملموسة تتزايد بالابتكار والتجديد", "أصول عقارية فقط", "قروض بنكية"], correct: 1, explanation: "رأس المال الفكري معرفة غير ملموسة وقيمته تتزايد بالابتكار والتجديد." }
+                ]
+            },
+            "database_systems": {
+                title: "قواعد البيانات (Database Systems)",
+                code: "DB-302",
+                icon: "fa-database",
+                modules: ["مقدمة في نظم قواعد البيانات", "نموذج الكيان والارتباط ERD", "لغة الاستعلام المهيكلة SQL", "التطبيع وقواعد البيانات العلائقية"],
+                questions: [
+                    { id: 101, moduleIndex: 2, question: "ما هو الأمر المستخدم لاسترجاع البيانات في SQL؟", options: ["UPDATE", "SELECT", "INSERT", "DELETE"], correct: 1, explanation: "أمر SELECT يُستخدم لاسترجاع البيانات من الجداول." },
+                    { id: 102, moduleIndex: 1, question: "يمثل المفتاح الأساسي (Primary Key):", options: ["قيمة مكررة في الجدول", "معرف فريد لا يتكرر ولا يقبل القيم الفارغة", "مفتاح يربط جدولاً بجدول آخر", "نوع بيانات نصي"], correct: 1, explanation: "المفتاح الأساسي فريد ولا يسمح بتكرار القيم أو تركها فارغة." }
+                ]
+            },
+            "systems_analysis": {
+                title: "تحليل وتصميم الأنظمة (Systems Analysis)",
+                code: "SYS-310",
+                icon: "fa-sitemap",
+                modules: ["دورة حياة تطوير النظام SDLC", "جمع المعلومات", "مخططات تدفق البيانات DFD", "التصميم الشيئي OOP"],
+                questions: [
+                    { id: 201, moduleIndex: 0, question: "ما هي أول مرحلة في دورة حياة النظام (SDLC)؟", options: ["التصميم", "التنفيذ", "تحديد المشكلة والتخطيط", "الصيانة"], correct: 2, explanation: "أول مرحلة هي التخطيط وتحديد المتطلبات والمشكلة." }
+                ]
+            }
+        };
+
+        // حالة التطبيق الحالية
+        let currentUser = JSON.parse(localStorage.getItem('km_user')) || null;
+        let currentCourseKey = null;
+        let activeQuizQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timerInterval = null;
+        let timeLeft = 1800; // 30 دقيقة
+        let testStartTime = 0;
+
+        // تهيئة التطبيق عند الفتح
+        window.onload = function() {
+            initDarkMode();
+            if (currentUser) {
+                showDashboard();
+            } else {
+                document.getElementById('authScreen').classList.remove('hidden');
+            }
+            loadLeaderboard();
+        };
+
+        // تسجيل الدخول
+        function handleAuth(e) {
+            e.preventDefault();
+            const name = document.getElementById('inputName').value.trim();
+            const major = document.getElementById('inputMajor').value.trim();
+            if(!name) return;
+
+            currentUser = { name, major };
+            localStorage.setItem('km_user', JSON.stringify(currentUser));
+            showDashboard();
+        }
+
+        function showDashboard() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('welcomeName').textContent = currentUser.name;
+            document.getElementById('navUserName').textContent = currentUser.name;
+            renderCoursesGrid();
+            updateUserStats();
+        }
+
+        // عرض بطاقات المواد الدراسية
+        function renderCoursesGrid() {
+            const grid = document.getElementById('coursesGrid');
+            grid.innerHTML = '';
+            for(let key in COURSES_DATA) {
+                const course = COURSES_DATA[key];
+                grid.innerHTML += `
+                    <div onclick="openCourse('${key}')" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 hover:shadow-md cursor-pointer transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid ${course.icon}"></i>
+                            </div>
+                            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold px-2.5 py-1 rounded-full">${course.code}</span>
+                            <h4 class="text-xl font-bold mt-3">${course.title}</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">${course.modules.length} محاور رئيسية • ${course.questions.length} سؤالاً معتمداً</p>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                            <span>ابدأ المراجعة والاختبار</span>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // فتح مادة دراسية
+        function openCourse(key) {
+            currentCourseKey = key;
+            const course = COURSES_DATA[key];
+            document.getElementById('mainDashboard').classList.add('hidden');
+            document.getElementById('courseScreen').classList.remove('hidden');
+            document.getElementById('activeCourseCode').textContent = course.code;
+            document.getElementById('activeCourseTitle').textContent = course.title;
+
+            const modContainer = document.getElementById('modulesList');
+            modContainer.innerHTML = '';
+            course.modules.forEach((mod, idx) => {
+                modContainer.innerHTML += `
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 flex items-center justify-between text-sm font-semibold">
+                        <span>${mod}</span>
+                        <button onclick="startModuleQuiz(${idx})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-xl transition">اختبار المحور</button>
+                    </div>
+                `;
+            });
+        }
+
+        function backToDashboard() {
+            document.getElementById('courseScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            updateUserStats();
+        }
+
+        // بدء الاختبار
+        let quizTimer = null;
+        function startQuiz(mode, moduleIndex = null) {
+            const course = COURSES_DATA[currentCourseKey];
+            if(mode === 'all') {
+                activeQuizQuestions = [...course.questions];
+                document.getElementById('quizModuleBadge').textContent = "اختبار شامل للمقرر";
+            } else {
+                activeQuizQuestions = course.questions.filter(q => q.moduleIndex === moduleIndex);
+                document.getElementById('quizModuleBadge').textContent = course.modules[moduleIndex];
+            }
+
+            if(activeQuizQuestions.length === 0) {
+                alert("لا توجد أسئلة متاحة لهذا المحور حالياً.");
+                return;
+            }
+
+            // خلط الأسئلة عشوائياً
+            activeQuizQuestions.sort(() => Math.random() - 0.5);
+
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            testStartTime = Date.now();
+            timeLeft = 1800; // 30 دقيقة
+
+            document.getElementById('courseScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+
+            document.getElementById('quizTitle').textContent = course.title;
+            startTimer();
+            renderQuestion();
+        }
+
+        function startModuleQuiz(idx) {
+            startQuiz('module', idx);
+        }
+
+        function startTimer() {
+            clearInterval(quizTimer);
+            quizTimer = setInterval(() => {
+                timeLeft--;
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timerDisplay').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                if(timeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // عرض السؤال الحالي
+        function renderQuestion() {
+            const q = activeQuizQuestions[currentQuestionIndex];
+            const total = activeQuizQuestions.length;
+            
+            document.getElementById('questionCounter').textContent = `السؤال ${currentQuestionIndex + 1} من ${total}`;
+            const progress = ((currentQuestionIndex + 1) / total) * 100;
+            document.getElementById('questionProgressText').textContent = `${Math.round(progress)}%`;
+            document.getElementById('quizProgressBar').style.width = `${progress}%`;
+
+            document.getElementById('questionText').textContent = q.question;
+
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === idx;
+                optsContainer.innerHTML += `
+                    <div onclick="selectOption(${idx})" class="p-4 rounded-2xl border-2 cursor-pointer transition flex items-center gap-3 ${isSelected ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-bold' : 'border-slate-200 dark:border-slate-700 hover:border-indigo-300'}">
+                        <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300'}">${String.fromCharCode(65 + idx)}</div>
+                        <span>${opt}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            if(currentQuestionIndex === total - 1) {
+                nextBtn.textContent = "تسليم الاختبار";
+                nextBtn.onclick = submitQuiz;
+            } else {
+                nextBtn.textContent = "السؤال التالي";
+                nextBtn.onclick = nextQuestion;
+            }
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIndex] = optIdx;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if(currentQuestionIndex < activeQuizQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if(currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        // تسليم الاختبار وتصحيحه
+        function submitQuiz() {
+            clearInterval(quizTimer);
+            let score = 0;
+            const total = activeQuizQuestions.length;
+
+            activeQuizQuestions.forEach((q, idx) => {
+                if(userAnswers[idx] === q.correct) {
+                    score++;
+                }
+            });
+
+            const percentage = Math.round((score / total) * 100);
+            const timeElapsedSecs = Math.floor((Date.now() - testStartTime) / 1000);
+            const timeStr = `${Math.floor(timeElapsedSecs/60).toString().padStart(2,'0')}:${(timeElapsedSecs%60).toString().padStart(2,'0')}`;
+
+            // حفظ النتيجة في لوحة المتصدرين المحلية وسجل الطالب
+            saveResultRecord({
+                name: currentUser.name,
+                major: currentUser.major,
+                course: COURSES_DATA[currentCourseKey].title,
+                score: `${score}/${total}`,
+                percentage: percentage,
+                time: timeStr,
+                timeSecs: timeElapsedSecs,
+                timestamp: Date.now()
+            });
+
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            document.getElementById('resFinalScore').textContent = `${score}/${total}`;
+            document.getElementById('resPercentage').textContent = `${percentage}%`;
+            document.getElementById('resTimeUsed').textContent = timeStr;
+
+            // بناء تفاصيل المراجعة
+            const reviewContainer = document.getElementById('detailedReviewContainer');
+            reviewContainer.innerHTML = '';
+            activeQuizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+                reviewContainer.innerHTML += `
+                    <div class="p-4 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-rose-200 bg-rose-50/50 dark:bg-rose-900/10'} space-y-2">
+                        <div class="flex justify-between items-center text-xs font-bold">
+                            <span>السؤال ${idx + 1}</span>
+                            <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${isCorrect ? 'إجابة صحيحة ✓' : 'إجابة خاطئة ✕'}</span>
+                        </div>
+                        <p class="font-bold text-sm">${q.question}</p>
+                        <div class="text-xs space-y-1 mt-2">
+                            <p class="text-slate-600 dark:text-slate-300">إجابتك: <span class="font-semibold">${userAns !== undefined ? q.options[userAns] : 'لم تقم بالإجابة'}</span></p>
+                            ${!isCorrect ? `<p class="text-emerald-600 font-semibold">الإجابة الصحيحة: ${q.options[q.correct]}</p>` : ''}
+                            <p class="text-slate-400 mt-1 italic">توضيح: ${q.explanation}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function restartQuiz() {
+            startQuiz('all');
+        }
+
+        // تخزين النتائج ولوحة المتصدرين
+        function saveResultRecord(record) {
+            let history = JSON.parse(localStorage.getItem('km_results_history')) || [];
+            history.push(record);
+            localStorage.setItem('km_results_history', JSON.stringify(history));
+            loadLeaderboard();
+        }
+
+        function loadLeaderboard() {
+            let history = JSON.parse(localStorage.getItem('km_results_history')) || [];
+            // تصفية المحاولات لأخذ أعلى نتيجة لكل طالب ومنع التكرار مع مراعاة أسرع زمن
+            let uniqueStudents = {};
+            history.forEach(item => {
+                if(!uniqueStudents[item.name] || item.percentage > uniqueStudents[item.name].percentage || (item.percentage === uniqueStudents[item.name].percentage && item.timeSecs < uniqueStudents[item.name].timeSecs)) {
+                    uniqueStudents[item.name] = item;
+                }
+            });
+
+            let sorted = Object.values(uniqueStudents).sort((a,b) => b.percentage - a.percentage || a.timeSecs - b.timeSecs);
+            let top5 = sorted.slice(0, 5);
+
+            const tbody = document.getElementById('leaderboardTableBody');
+            if(top5.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">لا توجد نتائج مسجلة حتى الآن. كن أول المشاركين!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            top5.forEach((item, index) => {
+                let badgeClass = "bg-slate-100 text-slate-600";
+                if(index === 0) badgeClass = "bg-amber-100 text-amber-700 font-bold";
+                else if(index === 1) badgeClass = "bg-slate-200 text-slate-700 font-bold";
+                else if(index === 2) badgeClass = "bg-amber-50 text-amber-800 font-bold";
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition">
+                        <td class="py-3"><span class="w-7 h-7 rounded-xl ${badgeClass} inline-flex items-center justify-center text-xs">${index + 1}</span></td>
+                        <td class="py-3 font-semibold">${item.name}</td>
+                        <td class="py-3 text-slate-500 text-xs">${item.course}</td>
+                        <td class="py-3 font-bold text-indigo-600">${item.percentage}% (${item.score})</td>
+                        <td class="py-3 text-slate-400 text-xs">${item.time}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateUserStats() {
+            let history = JSON.parse(localStorage.getItem('km_results_history')) || [];
+            let userHistory = history.filter(h => h.name === currentUser.name);
+            document.getElementById('statCompletedTests').textContent = userHistory.length;
+            if(userHistory.length > 0) {
+                let avg = Math.round(userHistory.reduce((acc, curr) => acc + curr.percentage, 0) / userHistory.length);
+                document.getElementById('statAvgScore').textContent = `${avg}%`;
+            }
+        }
+
+        // تفعيل الوضع الليلي
+        function initDarkMode() {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeIcon').className = "fa-solid fa-sun text-yellow-400";
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+            document.getElementById('darkModeIcon').className = isDark ? "fa-solid fa-sun text-yellow-400" : "fa-solid fa-moon text-slate-600";
+        }
+
+        // PWA Install Prompt Handler
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').style.display = 'flex';
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installBanner').style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+    </script>
+</body>
+</html>
